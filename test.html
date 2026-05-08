@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធចុះឈ្មោះសិស្ស</title>
+    <style>
+        body { font-family: 'Khmer OS Battambang', sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ចុះឈ្មោះសិស្សថ្មី</h2>
+    <form id="studentForm">
+        <input type="text" id="name" placeholder="ឈ្មោះសិស្ស" required>
+        <input type="text" id="gender" placeholder="ភេទ" required>
+        <input type="number" id="age" placeholder="អាយុ" required>
+        <input type="text" id="class" placeholder="ថ្នាក់រៀន" required>
+        <button type="submit">ចុះឈ្មោះ</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('studentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // ទទួលបានតម្លៃពី input
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const age = document.getElementById('age').value;
+        const className = document.getElementById('class').value;
+
+        // បង្ហាញលទ្ធផល (ក្នុងជំហាននេះ យើងបង្ហាញជា Alert)
+        alert("ចុះឈ្មោះជោគជ័យ!\n\nឈ្មោះ: " + name + "\nភេទ: " + gender + "\nអាយុ: " + age + "\nថ្នាក់: " + className);
+        
+        // សម្អាតទម្រង់
+        document.getElementById('studentForm').reset();
+    });
+</script>
+
+</body>
+</html>
