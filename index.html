@@ -41,7 +41,7 @@
   .btn-secondary { background: var(--surface2); color: var(--text); border: 2px solid var(--accent4); }
   .btn-danger { background: var(--wrong); color: #fff; }
   .btn-success { background: var(--correct); color: #000; }
-  .btn-word { background: #2b579a; color: #fff; border: 1px solid #1a3a6c; } /* Word Doc Color */
+  .btn-word { background: #2b579a; color: #fff; border: 1px solid #1a3a6c; }
 
   /* ── Login Portal ── */
   .login-box { background: var(--surface); padding: 30px; border-radius: var(--radius); border: 2px solid var(--surface2); width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 15px; }
@@ -81,7 +81,7 @@
 
 <div id="screen-login" class="screen active">
   <div class="school-brand-big">
-    <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+    <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
     <div class="school-title-big">សាលារៀនសុវណ្ណភូមិ</div>
     <div class="school-campus-big">ទីតាំងទួលពង្រ</div>
   </div>
@@ -92,7 +92,7 @@
     <input type="password" id="login-pass" class="input-field" placeholder="លេខសម្ងាត់ (Password)">
     <button class="btn btn-primary" onclick="login()">ចូលប្រព័ន្ធ (Login)</button>
     <div style="font-size:12px; color:#666; text-align:center; margin-top:10px;">
-     
+      
     </div>
   </div>
 </div>
@@ -101,7 +101,7 @@
   <div class="dashboard-container">
     <div class="dash-header">
       <div class="school-brand-sm">
-        <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+        <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
         <div class="school-info-sm"><span class="school-title-sm">គណនីអ្នកគ្រប់គ្រង (Admin)</span></div>
       </div>
       <button class="btn btn-danger" onclick="logout()">ចាកចេញ</button>
@@ -162,7 +162,7 @@
   <div class="dashboard-container">
     <div class="dash-header">
       <div class="school-brand-sm">
-        <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+        <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
         <div class="school-info-sm">
           <span class="school-title-sm">សិស្ស៖ <span id="student-name-display" style="color:var(--accent1);"></span></span>
         </div>
@@ -177,7 +177,7 @@
 <div id="screen-game" class="screen" style="justify-content: flex-start;">
   <div class="game-header">
     <div class="school-brand-sm">
-      <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+      <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
       <div class="school-info-sm"><span class="school-title-sm">កំពុងប្រឡង</span></div>
     </div>
     <span id="game-stage-label" style="font-weight:bold; color:var(--accent1);"></span>
@@ -195,7 +195,7 @@
 <div id="screen-stage-complete" class="screen">
   <div style="font-size:50px">✅</div>
   <h2 style="margin:20px 0; color:var(--accent1);">អ្នកបានប្រឡងរួចរាល់!</h2>
-  <p style="color:var(--text-muted); margin-bottom:30px;">ចម្លើយនិងពិន្ទុត្រូវបានបញ្ជូនទៅកាន់លោកគ្រូ-អ្នកគ្រូរួចរាល់។</p>
+  <p style="color:var(--text-muted); margin-bottom:30px;">ចម្លើយនិងពិន្ទុត្រូវបានបញ្ជូនទៅកាន់លោកគ្រូ-អ្នកគ្រូរួចរាល់ Ohm</p>
   <button class="btn btn-primary" onclick="showScreen('screen-student-dash')">ត្រឡប់ទៅទំព័រដើម</button>
 </div>
 
@@ -232,7 +232,7 @@ const defaultAppDB = {
       name: "វិញ្ញាសាសាកល្បង៖ គណិត និងចំណេះដឹងទូទៅ",
       questions: [
         { type: "choice", text: "តើ ២ + ២ = ប៉ុន្មាន?", answers: ["៣", "៤", "៥", "៦"], correct: 1 },
-        { type: "blank", text: "រាជធានីកម្ពុជាបច្ចុប្បន្នគឺ __________។", correct: "ភ្នំពេញ" },
+        { type: "blank", text: "រាជធានីកម្ពុជាបច្ចុប្បន្នគឺ __________।", correct: "ភ្នំពេញ" },
         { type: "written", text: "ចូរពន្យល់ពីអត្ថន័យនៃពណ៌នៅលើទង់ជាតិកម្ពុជា។", sampleAnswer: "ពណ៌ខៀវ តំណាងឱ្យព្រះមហាក្សត្រ។ ពណ៌ក្រហម តំណាងឱ្យជាតិសាសន៍។ រូបប្រាសាទ តំណាងឱ្យសាសនា។" }
       ]
     }
@@ -441,13 +441,22 @@ function renderEditorTabs() {
 
 function renderEditorPanel() {
   const stage = appDB.stages[editingStage];
-  let html = `<label style="color:#aaa;font-size:12px;">ឈ្មោះវិញ្ញាសា៖</label>
+  if (!stage) {
+    document.getElementById('editor-stage-panel').innerHTML = "<p style='color:var(--text-muted);'>មិនមានវិញ្ញាសាឡើយ សូមចុចប៊ូតុងខាងលើដើម្បីបង្កើត។</p>";
+    return;
+  }
+  
+  // បន្ថែមប៊ូតុងសម្រាប់ លុបវិញ្ញាសាទាំងមូល (Delete Stage) នៅទីនេះ
+  let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <label style="color:#aaa;font-size:12px;">ឈ្មោះវិញ្ញាសា៖</label>
+                <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteStage(${editingStage})">🗑️ លុបវិញ្ញាសានេះទាំងមូល</button>
+              </div>
               <input class="editor-input" value="${stage.name}" oninput="appDB.stages[editingStage].name=this.value;saveDB();">`;
   
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
     html += `<div style="background:var(--surface2); padding:15px; margin-bottom:10px; border-radius:8px; position:relative;">
-               <b>សំណួរទី ${qi+1}:</b> <button onclick="deleteQ(${qi})" style="position:absolute; right:15px; background:none; border:none; color:red; cursor:pointer;">✕ លុប</button><br>
+               <b>សំណួរទី ${qi+1}:</b> <button onclick="deleteQ(${qi})" style="position:absolute; right:15px; background:none; border:none; color:red; cursor:pointer;">✕ លុបសំណួរ</button><br>
                <select class="editor-select" onchange="changeQType(${qi}, this.value)">
                  <option value="choice" ${qType==='choice'?'selected':''}>ជ្រើសរើសចម្លើយ (A,B,C,D)</option>
                  <option value="blank" ${qType==='blank'?'selected':''}>បំពេញចន្លោះ</option>
@@ -472,6 +481,20 @@ function renderEditorPanel() {
   });
   html += `<button class="btn btn-secondary" onclick="addQ()">+ បន្ថែមសំណួរ</button>`;
   document.getElementById('editor-stage-panel').innerHTML = html;
+}
+
+// មុខងារសម្រាប់លុបវិញ្ញាសាទាំងមូល
+function deleteStage(idx) {
+  if (confirm("តើអ្នកពិតជាចង់លុបវិញ្ញាសានេះទាំងមូលមែនទេ? រាល់សំណួរទាំងអស់ក្នុងវិញ្ញាសានេះនឹងត្រូវបាត់បង់រហូត។")) {
+    appDB.stages.splice(idx, 1);
+    if (appDB.stages.length === 0) {
+      appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0 }] });
+    }
+    editingStage = 0;
+    saveDB();
+    renderEditorTabs();
+    renderEditorPanel();
+  }
 }
 
 function changeQType(qi, type) {
@@ -508,7 +531,7 @@ function exportPDF(showAnswers) {
     </div>
   `;
 
-  const stage = appDB.stages[editingStage]; // Export only current editing stage
+  const stage = appDB.stages[editingStage];
   html += `<h2 style="background: #2d1b69; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">${stage.name}</h2>`;
 
   stage.questions.forEach((q, qi) => {
@@ -546,7 +569,6 @@ function exportPDF(showAnswers) {
 function exportWord() {
   const stage = appDB.stages[editingStage];
   
-  // HTML layout optimized for MS Word (Standard HTML + UTF-8)
   let wordHTML = `
     <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
@@ -599,7 +621,6 @@ function exportWord() {
 
   wordHTML += `</body></html>`;
 
-  // Create a Blob with UTF-8 BOM (\ufeff) to ensure Khmer Unicode renders perfectly in MS Word
   const blob = new Blob(['\ufeff', wordHTML], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
