@@ -71,7 +71,50 @@
   /* Editor inputs */
   .editor-input { background: var(--surface2); border: 1px solid #3d3575; border-radius: 6px; color: var(--text); font-family: 'Kantumruy Pro', sans-serif; padding: 10px; width: 100%; margin-bottom: 10px; }
   .editor-select { background: #2d2660; border: 2px solid var(--accent4); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Kantumruy Pro', sans-serif; font-weight: bold; margin-bottom: 12px; }
+
+  /* ── Math & Chemistry Subject Badge ── */
+  .subject-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; margin-left: 8px; }
+  .badge-math { background: rgba(78,205,196,0.15); color: var(--accent3); border: 1px solid rgba(78,205,196,0.3); }
+  .badge-chem { background: rgba(167,139,250,0.15); color: var(--accent4); border: 1px solid rgba(167,139,250,0.3); }
+  .badge-gen  { background: rgba(247,201,72,0.15);  color: var(--accent1); border: 1px solid rgba(247,201,72,0.3); }
+
+  /* ── Symbol Toolbar ── */
+  .sym-toolbar { background: #1a1640; border: 1px solid #3d3575; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .sym-toolbar-label { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-right: 4px; white-space: nowrap; }
+  .sym-btn { background: var(--surface2); border: 1px solid #4d4590; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 14px; cursor: pointer; transition: 0.15s; min-width: 30px; text-align: center; line-height: 1.4; }
+  .sym-btn:hover { background: var(--accent4); color: #fff; transform: scale(1.15); }
+  .sym-sep { width: 1px; height: 22px; background: #3d3575; margin: 0 4px; }
+  .sym-section { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
+
+  /* ── Subject Selector on stage creation ── */
+  .subject-selector { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .subject-opt { background: var(--surface2); border: 2px solid transparent; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 700; transition: 0.2s; }
+  .subject-opt:hover { border-color: var(--accent4); }
+  .subject-opt.active-math { border-color: var(--accent3); background: rgba(78,205,196,0.1); color: var(--accent3); }
+  .subject-opt.active-chem { border-color: var(--accent4); background: rgba(167,139,250,0.1); color: var(--accent4); }
+  .subject-opt.active-gen  { border-color: var(--accent1); background: rgba(247,201,72,0.1);  color: var(--accent1); }
+
+  /* ── Math Render (KaTeX) ── */
+  .math-preview { background: #fff; color: #111; border-radius: 6px; padding: 8px 14px; margin-top: 4px; font-size: 16px; display: none; min-height: 36px; }
+  .math-preview.show { display: block; }
+
+  /* ── Answer btn math render fix ── */
+  .answer-btn .katex { font-size: 1em; }
+
+  /* ── Score & subject filter on results ── */
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .filter-row label { color: var(--text-muted); font-size: 13px; }
+
+  /* ── Progress bar on game ── */
+  .progress-bar-wrap { width: 100%; max-width: 860px; height: 6px; background: var(--surface2); border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent4)); border-radius: 3px; transition: width 0.4s; }
+
+  /* ── Print / PDF header improvement ── */
+  @media print { .no-print { display: none !important; } }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -204,6 +247,7 @@
     <span id="game-stage-label" style="font-weight:bold; color:var(--accent1);"></span>
     <span id="game-q-progress" style="font-size:13px;"></span>
   </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="game-progress-fill" style="width:0%"></div></div>
   <div class="question-card">
     <div id="question-text" style="font-size: 20px; font-weight: bold; margin-bottom: 20px;"></div>
     <div id="game-input-area"></div>
@@ -234,6 +278,14 @@
       <button class="btn btn-secondary" style="margin-left:auto;" onclick="saveDB()">💾 រក្សាទុកកូដ</button>
     </div>
     
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding: 6px 0;">
+      <span style="font-size:13px; color:var(--text-muted);">ត្រងតាមមុខវិជ្ជា៖</span>
+      <button class="btn btn-secondary" id="filter-all" onclick="filterEditorBySubject('all')" style="padding:5px 14px;font-size:12px;">ទាំងអស់</button>
+      <button class="btn btn-secondary" id="filter-math" onclick="filterEditorBySubject('math')" style="padding:5px 14px;font-size:12px; color:var(--accent3);">📐 គណិតវិទ្យា</button>
+      <button class="btn btn-secondary" id="filter-chem" onclick="filterEditorBySubject('chem')" style="padding:5px 14px;font-size:12px; color:var(--accent4);">⚗️ គីមីវិទ្យា</button>
+      <button class="btn btn-secondary" id="filter-gen"  onclick="filterEditorBySubject('gen')"  style="padding:5px 14px;font-size:12px; color:var(--accent1);">📚 ទូទៅ</button>
+    </div>
+    
     <div id="editor-tabs" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;"></div>
     <div id="editor-stage-panel" style="background:var(--surface); border-radius:var(--radius); padding:20px; width:100%;"></div>
   </div>
@@ -245,17 +297,38 @@ const defaultAppDB = {
   users: [
     { username: 'admin', password: '123', role: 'admin' },
     { username: 'teacher1', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'sok', password: '123', role: 'student', createdBy: 'teacher1' } 
+    { username: 'sok', password: '123', role: 'student', createdBy: 'teacher1' }
   ],
   results: [],
   stages: [
     {
-      name: "វិញ្ញាសាសាកល្បង៖ គណិត និងចំណេះដឹងទូទៅ",
+      name: "វិញ្ញាសាគណិតវិទ្យា ថ្នាក់ទី ៩",
+      subject: "math",
+      createdBy: 'admin',
+      questions: [
+        { type: "choice", text: "តើ $x^2 - 5x + 6 = 0$ មានដំណោះស្រាយជាអ្វី?", answers: ["$x=2$ ឬ $x=3$", "$x=1$ ឬ $x=6$", "$x=-2$ ឬ $x=-3$", "$x=0$ ឬ $x=5$"], correct: 0, points: 10 },
+        { type: "blank", text: "គណនា $\\int_0^2 x^2\\,dx = $ __________", correct: "8/3", points: 15 },
+        { type: "written", text: "ចូរបញ្ជាក់ពីទ្រឹស្តីបទ Pythagore ហើយអនុវត្តន៍ $a=3$, $b=4$", sampleAnswer: "$c^2 = a^2 + b^2 = 9+16=25$, $c=5$", points: 20 }
+      ]
+    },
+    {
+      name: "វិញ្ញាសាគីមីវិទ្យា ថ្នាក់ទី ១១",
+      subject: "chem",
+      createdBy: 'admin',
+      questions: [
+        { type: "choice", text: "ប្រតិកម្ម H\u2082 + O\u2082 \u2192 H\u2082O ត្រូវបានតុល្យភាព?", answers: ["2H\u2082 + O\u2082 \u2192 2H\u2082O", "H\u2082 + O\u2082 \u2192 H\u2082O", "H\u2082 + 2O\u2082 \u2192 2H\u2082O", "4H\u2082 + O\u2082 \u2192 2H\u2082O"], correct: 0, points: 10 },
+        { type: "blank", text: "Na + Cl\u2082 \u2192 __________ (ដំណោះស្រាយ)", correct: "2NaCl", points: 10 },
+        { type: "written", text: "ពន្យល់ពីភាពខុសគ្នារវាង Exothermic និង Endothermic ។", sampleAnswer: "Exothermic: ចេញកម្តៅ (\u0394H < 0). Endothermic: ស្រូបកម្តៅ (\u0394H > 0)", points: 20 }
+      ]
+    },
+    {
+      name: "វិញ្ញាសាទូទៅ",
+      subject: "gen",
       createdBy: 'admin',
       questions: [
         { type: "choice", text: "តើ ២ + ២ = ប៉ុន្មាន?", answers: ["៣", "៤", "៥", "៦"], correct: 1, points: 10 },
-        { type: "blank", text: "រាជធានីកម្ពុជាបច្ចុប្បន្នគឺ __________。", correct: "ភ្នំពេញ", points: 10 },
-        { type: "written", text: "ចូរពន្យល់ពីអត្ថន័យនៃពណ៌នៅលើទង់ជាតិកម្ពុជា។", sampleAnswer: "ពណ៌ខៀវ តំណាងឱ្យព្រះមហាក្សត្រ...", points: 15 }
+        { type: "blank", text: "រាជធានីកម្ពុជាបច្ចុប្បន្នគឺ __________", correct: "ភ្នំពេញ", points: 10 },
+        { type: "written", text: "ចូរពន្យល់ពីអត្ថន័យពណ៌នៅលើទង់ជាតិកម្ពុជា។", sampleAnswer: "ពណ៌ខៀវ តំណាងព្រះមហាក្សត្រ...", points: 15 }
       ]
     }
   ]
@@ -263,15 +336,97 @@ const defaultAppDB = {
 
 let appDB = JSON.parse(localStorage.getItem('onlineQuizDB')) || JSON.parse(JSON.stringify(defaultAppDB));
 
-let currentUser = null; 
+let currentUser = null;
 let currentStageIndex = 0;
 let currentQIndex = 0;
 let currentScore = 0;
 let answered = false;
 let editingStage = -1;
+let editorSubjectFilter = 'all';
+
+// ── Subject helpers ──
+const SUBJECT_INFO = {
+  math: { label: '📐 គណិតវិទ្យា', cls: 'badge-math' },
+  chem: { label: '⚗️ គីមីវិទ្យា', cls: 'badge-chem' },
+  gen:  { label: '📚 ទូទៅ',      cls: 'badge-gen'  }
+};
+function subjectBadge(sub) {
+  const s = SUBJECT_INFO[sub] || SUBJECT_INFO.gen;
+  return `<span class="subject-badge ${s.cls}">${s.label}</span>`;
+}
+
+// ── KaTeX render helper ──
+function renderMath(el) {
+  if (typeof renderMathInElement === 'function') {
+    renderMathInElement(el, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$',  right: '$',  display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true }
+      ],
+      throwOnError: false
+    });
+  }
+}
 
 function saveDB() { localStorage.setItem('onlineQuizDB', JSON.stringify(appDB)); }
-function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Re-render math in new screen
+  setTimeout(() => renderMath(document.getElementById(id)), 80);
+}
+
+// ── Symbol toolbar definition ──
+const MATH_SYMBOLS = [
+  { g: 'ប្រមាណ', syms: ['+','−','×','÷','=','≠','≈','±','∓'] },
+  { g: 'ប្រៀប', syms: ['<','>','≤','≥','≪','≫'] },
+  { g: 'អាំង', syms: ['∫','∬','∑','∏','√','∛','∂','∞'] },
+  { g: 'មូលន', syms: ['π','θ','α','β','γ','δ','λ','μ','σ','φ','ω','Δ','Σ','Ω'] },
+  { g: 'Vector', syms: ['→','←','↑','↓','⟶','⟵','∇','⊕','⊗'] },
+  { g: 'ហ្គីម', syms: ['∠','∟','⊥','∥','△','□','⬡','⊙','○'] },
+  { g: 'Exp', syms: ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹','⁺','⁻','ⁿ'] },
+  { g: 'Sub', syms: ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉','₊','₋','₍','₎'] },
+];
+const CHEM_SYMBOLS = [
+  { g: 'ធាតុ', syms: ['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca','Fe','Cu','Zn','Ag','Au','Hg','Pb','I','Br'] },
+  { g: 'ប្រតិ', syms: ['→','⇌','↑','↓','⇒','⟶','⟷','⟶'] },
+  { g: 'ទូទៅ', syms: ['°C','°F','K','mol','atm','pH','Δ','ΔH','ΔG','ΔS','Ka','Kb','Kc','Kp','Kw'] },
+  { g: 'Sub', syms: ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉'] },
+  { g: 'Sup', syms: ['⁰','¹','²','³','⁴','⁺','⁻'] },
+  { g: 'LaTeX', syms: ['$  $','\\frac{a}{b}','\\sqrt{x}','\\sum_{i=1}^{n}','\\int_a^b','\\vec{F}','\\Delta H','\\rightarrow','\\rightleftharpoons','\\approx'] },
+];
+
+function buildSymToolbar(inputId, subject) {
+  // បន្ថែមលក្ខខណ្ឌនេះដើម្បីលាក់ Toolbar ពេលដែលជាវិញ្ញាសាទូទៅ
+  if (subject === 'gen' || !subject) return '';
+
+  const set = (subject === 'chem') ? CHEM_SYMBOLS : MATH_SYMBOLS;
+  let html = `<div class="sym-toolbar">`;
+  html += `<span class="sym-toolbar-label">${subject === 'chem' ? '⚗️' : '📐'} និមិត្តសញ្ញា៖</span>`;
+  set.forEach(grp => {
+    html += `<div class="sym-section"><span class="sym-toolbar-label" style="font-size:9px;color:#6b63a8;">${grp.g}</span>`;
+    grp.syms.forEach(sym => {
+      const escaped = sym.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      html += `<button type="button" class="sym-btn" title="${escaped}" onclick="insertSymbol('${inputId}','${escaped}')">${sym}</button>`;
+    });
+    html += `</div><div class="sym-sep"></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function insertSymbol(inputId, sym) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  const s = el.selectionStart, e = el.selectionEnd;
+  const v = el.value;
+  el.value = v.slice(0, s) + sym + v.slice(e);
+  el.selectionStart = el.selectionEnd = s + sym.length;
+  el.dispatchEvent(new Event('input'));
+  el.focus();
+}
 
 // ══ AUTHENTICATION ══
 function login() {
@@ -468,18 +623,20 @@ function renderStudentDash() {
     
     const hasTaken = appDB.results.find(r => r.student === currentUser.username && r.stage === stage.name);
     let totalStagePoints = stage.questions.reduce((sum, q) => sum + (q.points || 0), 0);
+    const sub = stage.subject || 'gen';
     grid.innerHTML += `
       <div class="card" style="${hasTaken ? 'opacity:0.6; border-color:var(--correct);' : ''}" onclick="startStudentStage(${i}, ${!!hasTaken})">
-        <h3>${stage.name}</h3>
+        <h3>${stage.name} ${subjectBadge(sub)}</h3>
         <p style="font-size:13px; color:var(--text-muted);">${stage.questions.length} សំណួរ (សរុប ${totalStagePoints} ពិន្ទុ)</p>
         <div style="margin-top:10px; font-size:12px; font-weight:bold; color:${hasTaken ? 'var(--correct)' : 'var(--accent4)'}">
-          ${hasTaken ? `ប្រឡងរួចរាល់` : 'ចុចដើម្បីប្រឡង'}
+          ${hasTaken ? 'ប្រឡងរួចរាល់' : 'ចុចដើម្បីប្រឡង'}
         </div>
       </div>
     `;
   });
   
   if(grid.innerHTML === '') grid.innerHTML = '<p style="color:var(--text-muted);">លោកគ្រូ/អ្នកគ្រូរបស់អ្នកមិនទាន់បានរៀបចំវិញ្ញាសាទេ!</p>';
+  setTimeout(() => renderMath(grid), 60);
 }
 
 function startStudentStage(idx, hasTaken) {
@@ -495,6 +652,12 @@ function loadQuestion() {
   const q = stage.questions[currentQIndex];
   answered = false;
   document.getElementById('game-q-progress').textContent = `សំណួរទី ${currentQIndex+1} / ${stage.questions.length}`;
+  
+  // progress bar
+  const pct = ((currentQIndex) / stage.questions.length) * 100;
+  const fill = document.getElementById('game-progress-fill');
+  if (fill) fill.style.width = pct + '%';
+
   document.getElementById('question-text').innerHTML = `${q.text} <span style="font-size:14px;color:var(--accent4);font-weight:normal;margin-left:10px;">(${q.points || 0} ពិន្ទុ)</span>`;
   document.getElementById('next-btn').style.display = 'none';
   const area = document.getElementById('game-input-area');
@@ -508,7 +671,7 @@ function loadQuestion() {
     q.answers.forEach((ans, i) => {
       const btn = document.createElement('button');
       btn.className = 'answer-btn';
-      btn.innerHTML = `<b>${letters[i]}.</b> ${ans}`;
+      btn.innerHTML = `<b>${letters[i]}.</b> <span>${ans}</span>`;
       btn.onclick = () => {
         if(answered) return;
         answered = true;
@@ -532,6 +695,12 @@ function loadQuestion() {
     vBtn.onclick = () => { if(answered) return; answered = true; vBtn.style.display = 'none'; document.getElementById('next-btn').style.display = 'block'; };
     area.appendChild(vBtn);
   }
+
+  // Render math in question and answers
+  setTimeout(() => {
+    renderMath(document.getElementById('question-text'));
+    renderMath(area);
+  }, 60);
 }
 
 function nextQuestion() {
@@ -546,55 +715,137 @@ function nextQuestion() {
 }
 
 // ══ EDITOR & EXPORT ══
-function showEditor() { 
+function filterEditorBySubject(sub) {
+  editorSubjectFilter = sub;
+  ['all','math','chem','gen'].forEach(s => {
+    const btn = document.getElementById('filter-' + s);
+    if (btn) btn.classList.toggle('btn-primary', s === sub);
+    if (btn) btn.classList.toggle('btn-secondary', s !== sub);
+  });
   editingStage = -1;
-  renderEditorTabs(); 
-  renderEditorPanel(); 
-  showScreen('screen-editor'); 
+  renderEditorTabs();
+  renderEditorPanel();
+}
+
+function showEditor() {
+  editorSubjectFilter = 'all';
+  editingStage = -1;
+  // reset filter buttons
+  ['all','math','chem','gen'].forEach(s => {
+    const btn = document.getElementById('filter-' + s);
+    if (btn) { btn.classList.toggle('btn-primary', s === 'all'); btn.classList.toggle('btn-secondary', s !== 'all'); }
+  });
+  renderEditorTabs();
+  renderEditorPanel();
+  showScreen('screen-editor');
 }
 
 function renderEditorTabs() {
   const tabs = document.getElementById('editor-tabs'); tabs.innerHTML = '';
   let firstValidStageFound = false;
-  
+
   appDB.stages.forEach((s, i) => {
     if (currentUser.role === 'teacher' && s.createdBy !== currentUser.username) return;
+    if (editorSubjectFilter !== 'all' && (s.subject || 'gen') !== editorSubjectFilter) return;
     if (editingStage === -1 && !firstValidStageFound) { editingStage = i; firstValidStageFound = true; }
-    
-    const btn = document.createElement('button'); 
+
+    const sub = s.subject || 'gen';
+    const si = SUBJECT_INFO[sub] || SUBJECT_INFO.gen;
+    const btn = document.createElement('button');
     btn.className = 'btn ' + (i === editingStage ? 'btn-primary' : 'btn-secondary');
-    btn.textContent = s.name; 
-    btn.onclick = () => { editingStage = i; renderEditorTabs(); renderEditorPanel(); }; 
+    btn.innerHTML = `${si.label.split(' ')[0]} ${s.name}`;
+    btn.onclick = () => { editingStage = i; renderEditorTabs(); renderEditorPanel(); };
     tabs.appendChild(btn);
   });
-  
-  const addBtn = document.createElement('button'); addBtn.className = 'btn btn-secondary'; addBtn.textContent = '+ បន្ថែមវិញ្ញាសា';
-  addBtn.onclick = () => { 
-    appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', createdBy: currentUser.username, questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 }] }); 
-    editingStage = appDB.stages.length - 1; 
-    saveDB(); renderEditorTabs(); renderEditorPanel(); 
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn btn-secondary';
+  addBtn.textContent = '+ បន្ថែមវិញ្ញាសា';
+  addBtn.onclick = () => {
+    const sub = editorSubjectFilter === 'all' ? 'gen' : editorSubjectFilter;
+    appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', subject: sub, createdBy: currentUser.username, questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 }] });
+    editingStage = appDB.stages.length - 1;
+    saveDB(); renderEditorTabs(); renderEditorPanel();
   };
   tabs.appendChild(addBtn);
 }
 
 function renderEditorPanel() {
   const stage = appDB.stages[editingStage];
-  if (!stage) { document.getElementById('editor-stage-panel').innerHTML = "<p style='color:var(--text-muted);'>មិនទាន់មានវិញ្ញាសាទេ សូមចុចប៊ូតុង '+ បន្ថែមវិញ្ញាសា' ខាងលើដើម្បីបង្កើត。</p>"; return; }
-  
-  let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><label style="color:#aaa;font-size:12px;">ឈ្មោះវិញ្ញាសា៖</label><button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteStage(${editingStage})">🗑️ លុបវិញ្ញាសានេះទាំងមូល</button></div><input class="editor-input" value="${stage.name}" oninput="appDB.stages[editingStage].name=this.value;saveDB();">`;
-  
+  if (!stage) { document.getElementById('editor-stage-panel').innerHTML = "<p style='color:var(--text-muted);'>មិនទាន់មានវិញ្ញាសាទេ សូមចុចប៊ូតុង '+ បន្ថែមវិញ្ញាសា' ខាងលើដើម្បីបង្កើត</p>"; return; }
+
+  const sub = stage.subject || 'gen';
+  const subOpts = ['math','chem','gen'].map(s => {
+    const si = SUBJECT_INFO[s];
+    return `<button type="button" class="subject-opt ${sub===s?'active-'+s:''}" onclick="changeStageSubject(${editingStage},'${s}')">${si.label}</button>`;
+  }).join('');
+
+  let html = `
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+    <label style="color:#aaa;font-size:12px;">ឈ្មោះវិញ្ញាសា:</label>
+    <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteStage(${editingStage})">🗑️ លុបវិញ្ញាសានេះទាំងមូល</button>
+  </div>
+  <input class="editor-input" id="stage-name-input" value="${stage.name}" oninput="appDB.stages[editingStage].name=this.value;saveDB();">
+  <label style="color:#aaa;font-size:12px; display:block; margin-bottom:6px;">មុខវិជ្ជា (Subject):</label>
+  <div class="subject-selector">${subOpts}</div>
+  `;
+
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
-    html += `<div style="background:var(--surface2); padding:15px; margin-bottom:10px; border-radius:8px; position:relative;"><b>សំណួរទី ${qi+1}:</b><span style="margin-left:15px; font-size:13px; color:var(--accent4);">កំណត់ពិន្ទុ៖ <input type="number" class="editor-input" style="width:70px; display:inline-block; padding:5px 10px;" value="${q.points || 0}" oninput="appDB.stages[editingStage].questions[${qi}].points=parseInt(this.value)||0;saveDB();"></span><button onclick="deleteQ(${qi})" style="position:absolute; right:15px; background:none; border:none; color:red; cursor:pointer;">✕ លុបសំណួរ</button><br><select class="editor-select" onchange="changeQType(${qi}, this.value)"><option value="choice" ${qType==='choice'?'selected':''}>ជ្រើសរើសចម្លើយ (A,B,C,D)</option><option value="blank" ${qType==='blank'?'selected':''}>បំពេញចន្លោះ</option><option value="written" ${qType==='written'?'selected':''}>សរសេរ/ឆ្លើយខ្លី</option></select><input class="editor-input" value="${q.text}" placeholder="ខ្លឹមសារសំណួរ" oninput="appDB.stages[editingStage].questions[${qi}].text=this.value;saveDB();">`;
+    const inputId = `q-text-${qi}`;
+    const symBar = buildSymToolbar(inputId, sub);
+    html += `
+    <div style="background:var(--surface2); padding:15px; margin-bottom:12px; border-radius:8px; position:relative; border-left:4px solid ${sub==='math'?'var(--accent3)':sub==='chem'?'var(--accent4)':'var(--accent1)'};">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <b>សំណួរទី ${qi+1}: <span style="font-size:13px; color:var(--accent4);">ពិន្ទុ: <input type="number" class="editor-input" style="width:65px;display:inline-block;padding:4px 8px;" value="${q.points||0}" oninput="appDB.stages[editingStage].questions[${qi}].points=parseInt(this.value)||0;saveDB();"></span></b>
+        <button onclick="deleteQ(${qi})" style="background:rgba(255,107,107,0.15);border:1px solid #ff6b6b;color:#ff6b6b;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:12px;">✕ លុប</button>
+      </div>
+      <select class="editor-select" onchange="changeQType(${qi}, this.value)">
+        <option value="choice" ${qType==='choice'?'selected':''}>ជ្រើសរើសចម្លើយ (A,B,C,D)</option>
+        <option value="blank"  ${qType==='blank' ?'selected':''}>បំពេញចន្លោះ</option>
+        <option value="written"${qType==='written'?'selected':''}>សរសេរ/ឆ្លើយខ្លី</option>
+      </select>
+      ${symBar}
+      <input class="editor-input" id="${inputId}" value="${q.text.replace(/"/g,'&quot;')}" placeholder="ខ្លឹមសារសំណួរ (អាចប្រើ $...$ សម្រាប់គណិតភ្នំ)" oninput="appDB.stages[editingStage].questions[${qi}].text=this.value;saveDB();">
+    `;
+
     if (qType === 'choice') {
-      const letters = ['A','B','C','D']; html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">`;
-      q.answers.forEach((ans, ai) => { html += `<div>${letters[ai]}: <input class="editor-input" value="${ans}" oninput="appDB.stages[editingStage].questions[${qi}].answers[${ai}]=this.value;saveDB();"></div>`; });
-      html += `</div>ចម្លើយត្រូវ (0=A, 1=B, 2=C, 3=D): <input type="number" min="0" max="3" class="editor-input" style="width:60px;display:inline-block;" value="${q.correct}" oninput="appDB.stages[editingStage].questions[${qi}].correct=parseInt(this.value);saveDB();">`;
-    } else if (qType === 'blank') { html += `<input class="editor-input" value="${q.correct||''}" placeholder="ចម្លើយត្រូវ (គន្លឹះ)" oninput="appDB.stages[editingStage].questions[${qi}].correct=this.value;saveDB();">`;
-    } else if (qType === 'written') { html += `<textarea class="editor-input" style="height:60px" placeholder="ចម្លើយគំរូសម្រាប់គ្រូ" oninput="appDB.stages[editingStage].questions[${qi}].sampleAnswer=this.value;saveDB();">${q.sampleAnswer||''}</textarea>`; }
+      const letters = ['A','B','C','D'];
+      html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">`;
+      q.answers.forEach((ans, ai) => {
+        const aId = `q-ans-${qi}-${ai}`;
+        html += `<div style="display:flex;align-items:center;gap:5px;">
+          <span style="color:var(--accent1);font-weight:bold;width:18px;">${letters[ai]}.</span>
+          <input class="editor-input" id="${aId}" style="margin:0;" value="${ans.replace(/"/g,'&quot;')}" placeholder="ចម្លើយ ${letters[ai]}" oninput="appDB.stages[editingStage].questions[${qi}].answers[${ai}]=this.value;saveDB();">
+        </div>`;
+      });
+      html += `</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <label style="font-size:13px;color:#aaa;">ចម្លើយត្រូវ:</label>
+        ${['A','B','C','D'].map((l,ai) => `<label style="cursor:pointer;font-weight:bold;"><input type="radio" name="correct-${qi}" value="${ai}" ${q.correct===ai?'checked':''} onchange="appDB.stages[editingStage].questions[${qi}].correct=${ai};saveDB();" style="margin-right:3px;">${l}</label>`).join('')}
+      </div>`;
+    } else if (qType === 'blank') {
+      const aId2 = `q-blank-${qi}`;
+      html += `${buildSymToolbar(aId2, sub)}<label style="font-size:12px;color:#aaa;">ចម្លើយត្រឹមត្រូវ:</label>
+      <input class="editor-input" id="${aId2}" value="${(q.correct||'').replace(/"/g,'&quot;')}" placeholder="ចម្លើយ" oninput="appDB.stages[editingStage].questions[${qi}].correct=this.value;saveDB();">`;
+    } else if (qType === 'written') {
+      html += `<label style="font-size:12px;color:#aaa;">គំរូចម្លើយ (សម្រាប់គ្រូ):</label>
+      <textarea class="editor-input" style="height:70px;" placeholder="ចម្លើយគំរូ" oninput="appDB.stages[editingStage].questions[${qi}].sampleAnswer=this.value;saveDB();">${q.sampleAnswer||''}</textarea>`;
+    }
     html += `</div>`;
   });
-  html += `<button class="btn btn-secondary" onclick="addQ()">+ បន្ថែមសំណួរ</button>`; document.getElementById('editor-stage-panel').innerHTML = html;
+
+  html += `<button class="btn btn-secondary" style="margin-top:8px;" onclick="addQ()">+ បន្ថែមសំណួរ</button>`;
+  const panel = document.getElementById('editor-stage-panel');
+  panel.innerHTML = html;
+  setTimeout(() => renderMath(panel), 80);
+}
+
+function changeStageSubject(idx, sub) {
+  appDB.stages[idx].subject = sub;
+  saveDB();
+  renderEditorTabs();
+  renderEditorPanel();
 }
 
 function deleteStage(idx) { 
@@ -606,29 +857,69 @@ function deleteStage(idx) {
 }
 
 function changeQType(qi, type) { const q = appDB.stages[editingStage].questions[qi]; q.type = type; if(type === 'choice' && !q.answers) q.answers = ['','','','']; if(type === 'choice' && typeof q.correct !== 'number') q.correct = 0; if(type === 'blank' && typeof q.correct !== 'string') q.correct = ''; if(type === 'written' && !q.sampleAnswer) q.sampleAnswer = ''; saveDB(); renderEditorPanel(); }
-function addQ() { appDB.stages[editingStage].questions.push({ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 }); saveDB(); renderEditorPanel(); }
+function addQ() {
+  const sub = (appDB.stages[editingStage] || {}).subject || 'gen';
+  appDB.stages[editingStage].questions.push({ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 });
+  saveDB(); renderEditorPanel();
+}
 function deleteQ(qi) { if(confirm("លុបសំណួរនេះទេ?")) { appDB.stages[editingStage].questions.splice(qi,1); saveDB(); renderEditorPanel(); } }
 
 function exportPDF(showAnswers) {
   if (editingStage === -1 || !appDB.stages[editingStage]) return alert("សូមជ្រើសរើសវិញ្ញាសាជាមុនសិន!");
-  const element = document.createElement('div');
-  element.style.cssText = "font-family:'Kantumruy Pro', 'Khmer OS Battambang', sans-serif; color:#111; padding:35px; background:#fff;";
-  let headerTitle = showAnswers ? "🔑 គន្លឹះចម្លើយវិញ្ញាសា (សម្រាប់គ្រូ)" : "📝 វិញ្ញាសាប្រឡង/កិច្ចការសាលា (សម្រាប់សិស្ស)";
-  let html = `<div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px double #2d1b69; padding-bottom: 12px; margin-bottom: 25px;"><div style="display: flex; align-items: center; gap: 12px;"><img src="Logo Sovannaphumi school.png" style="width: 65px; height: auto;" alt="Logo" onerror="this.style.display='none'"><div><h3 style="margin: 0; font-size: 16px; color: #2d1b69; font-weight: bold;">សាលារៀនសុវណ្ណភូមិ</h3><p style="margin: 2px 0 0 0; font-size: 12px; color: #e8a900; font-weight: bold;">ទីតាំងទួលពង្រ</p></div></div><div style="text-align: right;"><h2 style="margin: 0; color: #333; font-size: 16px; font-weight: bold;">${headerTitle}</h2></div></div><div style="margin-bottom: 20px;"><p style="color: #222; font-size: 13px;"><strong>ឈ្មោះសិស្ស៖</strong>.................................................................... <strong>ថ្នាក់ទី៖</strong>.................. <strong>កាលបរិច្ឆេទ៖</strong>...........................</p></div>`;
   const stage = appDB.stages[editingStage];
-  html += `<h2 style="background: #2d1b69; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">${stage.name}</h2>`;
+  const sub = stage.subject || 'gen';
+  const subNames = { math: 'គណិតវិទ្យា', chem: 'គីមីវិទ្យា', gen: 'ទូទៅ' };
+  const subColors = { math: '#4ecdc4', chem: '#a78bfa', gen: '#f7c948' };
+  const element = document.createElement('div');
+  element.style.cssText = "font-family:'Kantumruy Pro','Khmer OS Battambang',sans-serif; color:#111; padding:35px; background:#fff;";
+  let headerTitle = showAnswers ? "🔑 គន្លឹះចម្លើយ (សម្រាប់គ្រូ)" : "📝 វិញ្ញាសាប្រឡង (សម្រាប់សិស្ស)";
+  let html = `
+  <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px double #2d1b69;padding-bottom:12px;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="Logo Sovannaphumi school.png" style="width:65px;" alt="Logo" onerror="this.style.display='none'">
+      <div><h3 style="margin:0;font-size:16px;color:#2d1b69;font-weight:bold;">សាលារៀនសុវណ្ណភូមិ</h3>
+      <p style="margin:2px 0 0 0;font-size:12px;color:#e8a900;font-weight:bold;">ទីតាំងទួលពង្រ</p></div>
+    </div>
+    <div style="text-align:right;">
+      <h2 style="margin:0;color:#333;font-size:15px;font-weight:bold;">${headerTitle}</h2>
+      <span style="background:${subColors[sub]};color:#111;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:bold;">${subNames[sub]}</span>
+    </div>
+  </div>
+  <div style="margin-bottom:16px;font-size:13px;">
+    <strong>ឈ្មោះសិស្ស:</strong>....................................
+    <strong style="margin-left:20px;">ថ្នាក់ទី:</strong>....................
+    <strong style="margin-left:20px;">កាលបរិច្ឆេទ:</strong>............................
+  </div>
+  <h2 style="background:#2d1b69;color:#fff;padding:6px 14px;border-radius:4px;font-size:14px;margin-bottom:14px;">${stage.name}</h2>`;
+
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
-    html += `<div style="margin-bottom: 15px; padding: 10px; border-left: 4px solid #a78bfa; background: #f9f9fb; page-break-inside: avoid;"><p style="font-weight: bold; font-size: 13px; color: #000; margin-bottom: 6px;">សំណួរទី ${qi + 1} (${q.points || 0} ពិន្ទុ) ៖ ${q.text}</p>`;
+    // Strip LaTeX for PDF (replace $ delimiters with plain text hint)
+    const cleanText = q.text;
+    html += `<div style="margin-bottom:14px;padding:10px;border-left:4px solid ${subColors[sub]};background:#f9f9fb;page-break-inside:avoid;">
+      <p style="font-weight:bold;font-size:13px;color:#000;margin-bottom:6px;">
+        សំណួរទី ${qi+1} <span style="font-size:11px;color:#888;">(${q.points||0} ពិន្ទុ)</span> : ${cleanText}
+      </p>`;
     if (qType === 'choice') {
-      html += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-left: 10px;">`;
-      const letters = ['A', 'B', 'C', 'D'];
-      q.answers.forEach((ans, ai) => { const isCorrect = ai === q.correct; let style = "color: #333; padding: 2px 6px;"; if (showAnswers && isCorrect) style = "color: #1e7e78; font-weight: bold; background: #e6f7f6; padding: 2px 6px; border-radius:3px;"; html += `<div style="${style}"><strong>${letters[ai]}.</strong> ${ans} ${showAnswers && isCorrect ? ' ✓' : ''}</div>`; });
+      html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-left:10px;">`;
+      const letters = ['A','B','C','D'];
+      q.answers.forEach((ans, ai) => {
+        const isCorrect = ai === q.correct;
+        let style = "color:#333;padding:2px 6px;";
+        if (showAnswers && isCorrect) style = "color:#1e7e78;font-weight:bold;background:#e6f7f6;padding:2px 6px;border-radius:3px;";
+        html += `<div style="${style}"><strong>${letters[ai]}.</strong> ${ans}${showAnswers && isCorrect ? ' ✓' : ''}</div>`;
+      });
       html += `</div>`;
-    } else if (qType === 'blank') { if (showAnswers) html += `<div style="margin-left: 10px; font-size: 12px; color: #555;">✍️ ចម្លើយត្រឹមត្រូវ៖ <span style="color: #1e7e78; font-weight: bold;">${q.correct}</span></div>`; else html += `<div style="margin-left: 10px; font-size: 12px; color: #666;">✍️ ចម្លើយ៖ ....................................................................................................</div>`;
-    } else if (qType === 'written') { if (showAnswers) html += `<div style="margin-left: 10px; font-size: 12px; color: #555;"><div style="background: #f0f0f5; padding: 8px; border-radius: 4px; font-size:12px;"><strong>🔑 គន្លឹះ៖</strong> ${q.sampleAnswer}</div></div>`; else html += `<div style="margin-left: 10px; font-size: 12px; color: #777;"><div style="margin-bottom:20px;">ចម្លើយ៖ ..........................................................................................................................................</div><div>..........................................................................................................................................................</div></div>`; }
+    } else if (qType === 'blank') {
+      if (showAnswers) html += `<div style="margin-left:10px;font-size:12px;color:#555;">✍️ ចម្លើយ: <span style="color:#1e7e78;font-weight:bold;">${q.correct}</span></div>`;
+      else html += `<div style="margin-left:10px;font-size:12px;">✍️ ចម្លើយ: ..........................................................................</div>`;
+    } else if (qType === 'written') {
+      if (showAnswers) html += `<div style="margin-left:10px;font-size:12px;"><div style="background:#f0f0f5;padding:8px;border-radius:4px;"><strong>🔑 គំរូ:</strong> ${q.sampleAnswer}</div></div>`;
+      else html += `<div style="margin-left:10px;font-size:12px;"><div style="margin-bottom:18px;">ចម្លើយ: ........................................................................................................................................................</div><div>........................................................................................................................................................</div></div>`;
+    }
     html += `</div>`;
   });
+
   element.innerHTML = html;
   const pdfName = showAnswers ? 'គន្លឹះចម្លើយ_គ្រូ.pdf' : 'វិញ្ញាសាសិស្ស.pdf';
   html2pdf().set({ margin: 12, filename: pdfName, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
@@ -637,21 +928,40 @@ function exportPDF(showAnswers) {
 function exportWord() {
   if (editingStage === -1 || !appDB.stages[editingStage]) return alert("សូមជ្រើសរើសវិញ្ញាសាជាមុនសិន!");
   const stage = appDB.stages[editingStage];
-  let wordHTML = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>វិញ្ញាសាសិស្ស</title><style>body { font-family: 'Khmer OS Battambang', 'Kantumruy Pro', sans-serif; font-size: 12pt; color: #000; } .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; } .header h2 { font-size: 16pt; margin: 0; color: #2d1b69; } .header p { font-size: 12pt; margin: 5px 0; font-weight: bold; } .student-info { margin-bottom: 20px; font-size: 12pt; } .stage-title { font-size: 14pt; font-weight: bold; background: #e0e0e0; padding: 5px; } .question-box { margin-bottom: 15px; margin-top: 10px; } .question-text { font-weight: bold; font-size: 12pt; } .options { margin-left: 20px; } .option { margin-bottom: 5px; } .lines { color: #666; margin-top: 10px; }</style></head><body><div class="header"><h2>សាលារៀនសុវណ្ណភូមិ (ទីតាំងទួលពង្រ)</h2><p>📝 វិញ្ញាសាប្រឡង / កិច្ចការសាលា (សម្រាប់សិស្ស)</p></div><div class="student-info">ឈ្មោះសិស្ស៖.................................................................... ថ្នាក់ទី៖.................. កាលបរិច្ឆេទ៖...........................</div><div class="stage-title">${stage.name}</div>`;
+  const sub = stage.subject || 'gen';
+  const subNames = { math: 'គណិតវិទ្យា', chem: 'គីមីវិទ្យា', gen: 'ទូទៅ' };
+  let wordHTML = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>វិញ្ញាសាសិស្ស</title><style>body{font-family:'Khmer OS Battambang','Kantumruy Pro',sans-serif;font-size:12pt;color:#000;}.header{text-align:center;margin-bottom:20px;border-bottom:2px solid #000;padding-bottom:10px;}.header h2{font-size:16pt;margin:0;color:#2d1b69;}.stage-title{font-size:14pt;font-weight:bold;background:#e0e0e0;padding:5px;}.question-box{margin-bottom:15px;margin-top:10px;}.question-text{font-weight:bold;font-size:12pt;}.options{margin-left:20px;}.lines{color:#666;margin-top:10px;}</style></head><body>
+  <div class="header"><h2>សាលារៀនសុវណ្ណភូមិ (ទីតាំងទួលពង្រ)</h2><p>📝 វិញ្ញាសាប្រឡង — ${subNames[sub]}</p></div>
+  <div style="margin-bottom:16px;font-size:12pt;">ឈ្មោះ:.................................... ថ្នាក់:................ កាលបរិច្ឆេទ:................................</div>
+  <div class="stage-title">${stage.name}</div>`;
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
-    wordHTML += `<div class="question-box"><div class="question-text">សំណួរទី ${qi + 1} (${q.points || 0} ពិន្ទុ): ${q.text}</div>`;
-    if (qType === 'choice') { wordHTML += `<div class="options">`; const letters = ['A', 'B', 'C', 'D']; q.answers.forEach((ans, ai) => { wordHTML += `<div class="option"><strong>${letters[ai]}.</strong> ${ans}</div>`; }); wordHTML += `</div>`;
-    } else if (qType === 'blank') { wordHTML += `<div class="lines">✍️ ចម្លើយ៖ ....................................................................................................................</div>`;
-    } else if (qType === 'written') { wordHTML += `<div class="lines"><br>ចម្លើយ៖ ..............................................................................................................................................................<br><br>................................................................................................................................................................................<br><br>................................................................................................................................................................................</div>`; }
+    wordHTML += `<div class="question-box"><div class="question-text">សំណួរទី ${qi+1} (${q.points||0} ពិន្ទុ): ${q.text}</div>`;
+    if (qType === 'choice') {
+      wordHTML += `<div class="options">`; const letters = ['A','B','C','D'];
+      q.answers.forEach((ans, ai) => { wordHTML += `<div><strong>${letters[ai]}.</strong> ${ans}</div>`; });
+      wordHTML += `</div>`;
+    } else if (qType === 'blank') {
+      wordHTML += `<div class="lines">✍️ ចម្លើយ: ....................................................................................................................</div>`;
+    } else if (qType === 'written') {
+      wordHTML += `<div class="lines"><br>ចម្លើយ: ..............................................................................................................................................................<br><br>................................................................................................................................................................................<br><br>................................................................................................................................................................................</div>`;
+    }
     wordHTML += `</div>`;
   });
   wordHTML += `</body></html>`;
   const blob = new Blob(['\ufeff', wordHTML], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a'); link.href = url; link.download = `វិញ្ញាសាសិស្ស_${stage.name}.doc`;
+  const link = document.createElement('a');
+  link.href = url; link.download = `វិញ្ញាសាសិស្ស_${stage.name}.doc`;
   document.body.appendChild(link); link.click(); document.body.removeChild(link);
 }
+
+// ── Auto-render math on page load ──
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof renderMathInElement === 'function') {
+    setTimeout(() => renderMath(document.body), 200);
+  }
+});
 </script>
 </body>
 </html>
