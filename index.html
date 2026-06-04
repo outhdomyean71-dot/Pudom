@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ប្រព័ន្ធប្រឡងអនឡាញ — សាលារៀនសុវណ្ណភូមិ ទីតាំងទួលពង្រ</title>
+<title>ប្រព័ន្ធប្រឡងអនឡាញ — សាលារៀនសុវណ្ណភូមិ</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Kantumruy+Pro:wght@400;600;700;800&display=swap');
@@ -71,17 +71,13 @@
   /* Editor inputs */
   .editor-input { background: var(--surface2); border: 1px solid #3d3575; border-radius: 6px; color: var(--text); font-family: 'Kantumruy Pro', sans-serif; padding: 10px; width: 100%; margin-bottom: 10px; }
   .editor-select { background: #2d2660; border: 2px solid var(--accent4); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Kantumruy Pro', sans-serif; font-weight: bold; margin-bottom: 12px; }
-  .q-editor { background: var(--surface2); border-radius: var(--radius); padding: 16px 18px; position: relative; margin-bottom: 14px; }
-  .q-delete-btn { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--wrong); cursor: pointer; font-size: 20px; }
-  .correct-radio-group { display: flex; gap: 12px; margin-top: 8px; }
-  .file-input-hidden { display: none; }
 </style>
 </head>
 <body>
 
 <div id="screen-login" class="screen active">
   <div class="school-brand-big">
-    <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+    <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.src='https://i.postimg.cc/9M9B5Z8Z/placeholder.png'">
     <div class="school-title-big">សាលារៀនសុវណ្ណភូមិ</div>
     <div class="school-campus-big">ទីតាំងទួលពង្រ</div>
   </div>
@@ -91,9 +87,6 @@
     <input type="text" id="login-user" class="input-field" placeholder="ឈ្មោះគណនី (Username)">
     <input type="password" id="login-pass" class="input-field" placeholder="លេខសម្ងាត់ (Password)">
     <button class="btn btn-primary" onclick="login()">ចូលប្រព័ន្ធ (Login)</button>
-    <div style="font-size:12px; color:#666; text-align:center; margin-top:10px;">
-      
-    </div>
   </div>
 </div>
 
@@ -101,20 +94,21 @@
   <div class="dashboard-container">
     <div class="dash-header">
       <div class="school-brand-sm">
-        <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
-        <div class="school-info-sm"><span class="school-title-sm">គណនីអ្នកគ្រប់គ្រង (Admin)</span></div>
+        <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.src='https://i.postimg.cc/9M9B5Z8Z/placeholder.png'">
+        // <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-sm" onerror="this.style.display='none'">
+        <div class="school-info-sm"><span class="school-title-sm" id="admin-dash-title">គណនីអ្នកគ្រប់គ្រង</span></div>
       </div>
       <button class="btn btn-danger" onclick="logout()">ចាកចេញ</button>
     </div>
     
     <div class="grid-cards">
       <div class="card" onclick="showScreen('screen-manage-users')">
-        <h3>👥 គ្រប់គ្រងគណនីសិស្ស</h3>
-        <p style="font-size:13px; color:var(--text-muted);">បង្កើត ឬលុបគណនីសិស្ស</p>
+        <h3 id="manage-users-title">👥 គ្រប់គ្រងគណនី</h3>
+        <p style="font-size:13px; color:var(--text-muted);" id="manage-users-desc">បង្កើត ឬលុបគណនីសិស្ស</p>
       </div>
       <div class="card" onclick="showEditor()">
         <h3>📝 រៀបចំវិញ្ញាសាប្រឡង</h3>
-        <p style="font-size:13px; color:var(--text-muted);">បង្កើតសំណួរ និងទាញយកកិច្ចការ</p>
+        <p style="font-size:13px; color:var(--text-muted);">បង្កើតសំណួរ កំណត់ពិន្ទុ និងទាញយកកិច្ចការ</p>
       </div>
       <div class="card" onclick="showScreen('screen-results')">
         <h3>📊 របាយការណ៍ពិន្ទុ</h3>
@@ -131,15 +125,18 @@
       <button class="btn btn-secondary" onclick="showScreen('screen-admin-dash')">← ត្រឡប់ក្រោយ</button>
     </div>
     <div style="background:var(--surface); padding:20px; border-radius:var(--radius); width:100%; border:1px solid var(--surface2);">
-      <h4 style="margin-bottom:15px;">+ បង្កើតគណនីសិស្សថ្មី</h4>
-      <div style="display:flex; gap:10px;">
-        <input type="text" id="new-user-name" class="input-field" placeholder="ឈ្មោះសិស្ស (ឧទាហរណ៍៖ chan)">
-        <input type="text" id="new-user-pass" class="input-field" placeholder="លេខសម្ងាត់">
+      <h4 style="margin-bottom:15px;">+ បង្កើតគណនីថ្មី</h4>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="text" id="new-user-name" class="input-field" style="flex:1; min-width:150px;" placeholder="ឈ្មោះ (ឧទាហរណ៍៖ chan)">
+        <input type="text" id="new-user-pass" class="input-field" style="flex:1; min-width:150px;" placeholder="លេខសម្ងាត់">
+        <select id="new-user-role" class="input-field" style="width: auto; cursor:pointer;">
+          <option value="student">សិស្ស</option>
+        </select>
         <button class="btn btn-success" onclick="createUser()">បង្កើត</button>
       </div>
     </div>
     <div style="width:100%;">
-      <h4 style="margin-bottom:10px;">បញ្ជីសិស្សសរុប</h4>
+      <h4 style="margin-bottom:10px;" id="table-users-label">បញ្ជីគណនីសិស្សក្នុងបន្ទុក</h4>
       <table id="users-table"></table>
     </div>
   </div>
@@ -153,7 +150,7 @@
     </div>
     <div style="width:100%;">
       <table id="results-table"></table>
-      <button class="btn btn-danger" style="margin-top:15px;" onclick="clearResults()">លុបប្រវត្តិពិន្ទុទាំងអស់</button>
+      <button class="btn btn-danger" style="margin-top:15px;" id="btn-clear-results" onclick="clearResults()">លុបប្រវត្តិពិន្ទុទាំងអស់</button>
     </div>
   </div>
 </div>
@@ -162,7 +159,8 @@
   <div class="dashboard-container">
     <div class="dash-header">
       <div class="school-brand-sm">
-        <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+        <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.src='https://i.postimg.cc/9M9B5Z8Z/placeholder.png'">
+       // <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-sm" onerror="this.style.display='none'">
         <div class="school-info-sm">
           <span class="school-title-sm">សិស្ស៖ <span id="student-name-display" style="color:var(--accent1);"></span></span>
         </div>
@@ -177,7 +175,8 @@
 <div id="screen-game" class="screen" style="justify-content: flex-start;">
   <div class="game-header">
     <div class="school-brand-sm">
-      <img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-big" onerror="this.style.display='none'">
+      <img src="LogoSovannaphumischool.png" alt="Logo" class="school-logo-big" onerror="this.src='https://i.postimg.cc/9M9B5Z8Z/placeholder.png'">
+     //<img src="Logo Sovannaphumi school.png" alt="Logo" class="school-logo-sm" onerror="this.style.display='none'">
       <div class="school-info-sm"><span class="school-title-sm">កំពុងប្រឡង</span></div>
     </div>
     <span id="game-stage-label" style="font-weight:bold; color:var(--accent1);"></span>
@@ -195,7 +194,7 @@
 <div id="screen-stage-complete" class="screen">
   <div style="font-size:50px">✅</div>
   <h2 style="margin:20px 0; color:var(--accent1);">អ្នកបានប្រឡងរួចរាល់!</h2>
-  <p style="color:var(--text-muted); margin-bottom:30px;">ចម្លើយនិងពិន្ទុត្រូវបានបញ្ជូនទៅកាន់លោកគ្រូ-អ្នកគ្រូរួចរាល់ Ohm</p>
+  <p style="color:var(--text-muted); margin-bottom:30px;">ចម្លើយនិងពិន្ទុត្រូវបានបញ្ជូនទៅកាន់លោកគ្រូ-អ្នកគ្រូរួចរាល់</p>
   <button class="btn btn-primary" onclick="showScreen('screen-student-dash')">ត្រឡប់ទៅទំព័រដើម</button>
 </div>
 
@@ -209,7 +208,6 @@
     <div style="display:flex;gap:10px;flex-wrap:wrap;background:rgba(255,255,255,0.05);padding:15px;border-radius:10px; width:100%;">
       <button class="btn btn-primary" onclick="exportPDF(false)">📄 ទាញយក «វិញ្ញាសាសិស្ស» (PDF)</button>
       <button class="btn btn-word" onclick="exportWord()">📝 ទាញយក «វិញ្ញាសាសិស្ស» (Word)</button>
-      
       <button class="btn btn-success" onclick="exportPDF(true)">🔑 ទាញយក «គន្លឹះគ្រូ» (PDF)</button>
       <button class="btn btn-secondary" style="margin-left:auto;" onclick="saveDB()">💾 រក្សាទុកកូដ</button>
     </div>
@@ -224,22 +222,25 @@
 const defaultAppDB = {
   users: [
     { username: 'admin', password: '123', role: 'admin' },
-    { username: 'sok', password: '123', role: 'student' }
+    { username: 'teacher1', password: '123', role: 'teacher' },
+    // សិស្ស sok នេះជាឧទាហរណ៍ ត្រូវបានបង្កើតដោយ teacher1
+    { username: 'sok', password: '123', role: 'student', createdBy: 'teacher1' } 
   ],
   results: [],
   stages: [
     {
       name: "វិញ្ញាសាសាកល្បង៖ គណិត និងចំណេះដឹងទូទៅ",
       questions: [
-        { type: "choice", text: "តើ ២ + ២ = ប៉ុន្មាន?", answers: ["៣", "៤", "៥", "៦"], correct: 1 },
-        { type: "blank", text: "រាជធានីកម្ពុជាបច្ចុប្បន្នគឺ __________।", correct: "ភ្នំពេញ" },
-        { type: "written", text: "ចូរពន្យល់ពីអត្ថន័យនៃពណ៌នៅលើទង់ជាតិកម្ពុជា។", sampleAnswer: "ពណ៌ខៀវ តំណាងឱ្យព្រះមហាក្សត្រ។ ពណ៌ក្រហម តំណាងឱ្យជាតិសាសន៍។ រូបប្រាសាទ តំណាងឱ្យសាសនា។" }
+        { type: "choice", text: "តើ ២ + ២ = ប៉ុន្មាន?", answers: ["៣", "៤", "៥", "៦"], correct: 1, points: 10 },
+        { type: "blank", text: "រាជធានីកម្ពុជាបច្ចុប្បន្នគឺ __________।", correct: "ភ្នំពេញ", points: 10 },
+        { type: "written", text: "ចូរពន្យល់ពីអត្ថន័យនៃពណ៌នៅលើទង់ជាតិកម្ពុជា។", sampleAnswer: "ពណ៌ខៀវ តំណាងឱ្យព្រះមហាក្សត្រ...", points: 15 }
       ]
     }
   ]
 };
 
 let appDB = JSON.parse(localStorage.getItem('onlineQuizDB')) || JSON.parse(JSON.stringify(defaultAppDB));
+
 let currentUser = null; 
 let currentStageIndex = 0;
 let currentQIndex = 0;
@@ -260,7 +261,23 @@ function login() {
     currentUser = user;
     document.getElementById('login-user').value = '';
     document.getElementById('login-pass').value = '';
-    if (user.role === 'admin') {
+    
+    if (user.role === 'admin' || user.role === 'teacher') {
+      document.getElementById('admin-dash-title').textContent = user.role === 'admin' ? 'គណនីអ្នកគ្រប់គ្រង (Admin)' : 'គណនីគ្រូបង្រៀន (Teacher)';
+      
+      // Update texts based on Role
+      if(user.role === 'admin') {
+         document.getElementById('manage-users-title').textContent = '👥 គ្រប់គ្រងគណនីសរុប';
+         document.getElementById('manage-users-desc').textContent = 'សិស្ស និងគ្រូបង្រៀនទូទាំងប្រព័ន្ធ';
+         document.getElementById('table-users-label').textContent = 'បញ្ជីគណនីសរុបទូទាំងប្រព័ន្ធ';
+         document.getElementById('btn-clear-results').style.display = 'inline-block';
+      } else {
+         document.getElementById('manage-users-title').textContent = '👥 គ្រប់គ្រងគណនីសិស្ស';
+         document.getElementById('manage-users-desc').textContent = 'សិស្សនៅក្នុងថ្នាក់រៀនរបស់អ្នក';
+         document.getElementById('table-users-label').textContent = 'បញ្ជីគណនីសិស្សក្នុងបន្ទុករបស់អ្នក';
+         document.getElementById('btn-clear-results').style.display = 'none'; // គ្រូមិនអាចលុបប្រវត្តិពិន្ទុរួមបានទេ
+      }
+
       showScreen('screen-admin-dash');
     } else {
       document.getElementById('student-name-display').textContent = user.username;
@@ -274,20 +291,24 @@ function login() {
 
 function logout() { currentUser = null; showScreen('screen-login'); }
 
-// ══ ADMIN MANAGEMENTS ══
+// ══ USER MANAGEMENTS ══
 function createUser() {
   const u = document.getElementById('new-user-name').value.trim();
   const p = document.getElementById('new-user-pass').value.trim();
+  const r = document.getElementById('new-user-role').value;
+  
   if(!u || !p) return alert("សូមបញ្ចូលឈ្មោះ និងលេខសម្ងាត់!");
   if(appDB.users.find(x => x.username === u)) return alert("ឈ្មោះនេះមានរួចហើយ!");
+  if(r === 'teacher' && currentUser.role !== 'admin') return alert("អ្នកមិនមានសិទ្ធិបង្កើតគណនីគ្រូបង្រៀនទេ!");
   
-  appDB.users.push({ username: u, password: p, role: 'student' });
+  // កត់ត្រាទុកថាអ្នកណាជាអ្នកបង្កើតគណនីសិស្សនេះ (createdBy)
+  appDB.users.push({ username: u, password: p, role: r, createdBy: currentUser.username });
   saveDB(); document.getElementById('new-user-name').value = ''; document.getElementById('new-user-pass').value = '';
-  renderUsersTable(); alert("បង្កើតគណនីសិស្សបានជោគជ័យ!");
+  renderUsersTable(); alert("បង្កើតគណនីបានជោគជ័យ!");
 }
 
 function deleteUser(username) {
-  if(confirm("តើប្រាកដជាចង់លុបសិស្សនេះទេ?")) {
+  if(confirm("តើប្រាកដជាចង់លុបគណនីនេះទេ?")) {
     appDB.users = appDB.users.filter(u => u.username !== username);
     saveDB(); renderUsersTable();
   }
@@ -296,19 +317,48 @@ function deleteUser(username) {
 function renderUsersTable() {
   const table = document.getElementById('users-table');
   table.innerHTML = `<tr><th>ឈ្មោះគណនី</th><th>លេខសម្ងាត់</th><th>តួនាទី</th><th>សកម្មភាព</th></tr>`;
+  
+  const roleSelect = document.getElementById('new-user-role');
+  if (currentUser.role === 'admin') roleSelect.innerHTML = `<option value="student">សិស្ស</option><option value="teacher">គ្រូបង្រៀន</option>`;
+  else roleSelect.innerHTML = `<option value="student">សិស្ស</option>`;
+
   appDB.users.forEach(u => {
-    if(u.role !== 'admin') {
-      table.innerHTML += `<tr><td>${u.username}</td><td>${u.password}</td><td>សិស្ស</td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px;" onclick="deleteUser('${u.username}')">លុប</button></td></tr>`;
+    if(u.role === 'admin') return; 
+    
+    // ប្រសិនបើជាគ្រូ (Teacher) អោយគាត់មើលឃើញតែសិស្សដែលគាត់បានបង្កើត (createdBy) ប៉ុណ្ណោះ
+    if(currentUser.role === 'teacher') {
+      if(u.role === 'teacher') return; // មើលមិនឃើញគ្រូដូចគ្នាទេ
+      if(u.createdBy !== currentUser.username) return; // មើលមិនឃើញកូនសិស្សរបស់គ្រូផ្សេងទេ
     }
+    
+    let roleDisplay = u.role === 'teacher' ? '<span style="color:var(--accent1);font-weight:bold;">គ្រូបង្រៀន</span>' : 'សិស្ស';
+    table.innerHTML += `<tr><td>${u.username}</td><td>${u.password}</td><td>${roleDisplay}</td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px;" onclick="deleteUser('${u.username}')">លុប</button></td></tr>`;
   });
 }
 
 function renderResultsTable() {
   const table = document.getElementById('results-table');
   table.innerHTML = `<tr><th>កាលបរិច្ឆេទ</th><th>ឈ្មោះសិស្ស</th><th>វិញ្ញាសា</th><th>ពិន្ទុ (ចម្លើយជ្រើសរើស)</th></tr>`;
+  
   const sorted = [...appDB.results].reverse();
-  if(sorted.length === 0) table.innerHTML += `<tr><td colspan="4" style="text-align:center;">មិនទាន់មានទិន្នន័យប្រឡងទេ</td></tr>`;
-  sorted.forEach(r => { table.innerHTML += `<tr><td>${r.date}</td><td><b>${r.student}</b></td><td>${r.stage}</td><td style="color:var(--accent3);font-weight:bold;">${r.score}</td></tr>`; });
+  let count = 0;
+
+  // ស្វែងរកឈ្មោះសិស្សទាំងអស់ ដែលគ្រូម្នាក់នេះជាអ្នកគ្រប់គ្រង
+  let myStudents = [];
+  if(currentUser.role === 'teacher') {
+    myStudents = appDB.users.filter(u => u.createdBy === currentUser.username).map(u => u.username);
+  }
+
+  sorted.forEach(r => { 
+      // ត្រងយកតែពិន្ទុរបស់សិស្សក្នុងបន្ទុក (បើជា Teacher)
+      if(currentUser.role === 'teacher' && !myStudents.includes(r.student)) return;
+
+      count++;
+      let displayScore = `<span style="color:var(--accent3);font-weight:bold;font-size:16px;">${r.score}</span> <span style="font-size:12px;color:#aaa;">/ ${r.totalPoints || '?'}</span>`;
+      table.innerHTML += `<tr><td>${r.date}</td><td><b>${r.student}</b></td><td>${r.stage}</td><td>${displayScore}</td></tr>`; 
+  });
+
+  if(count === 0) table.innerHTML += `<tr><td colspan="4" style="text-align:center;">មិនទាន់មានទិន្នន័យប្រឡងទេ</td></tr>`;
 }
 
 function clearResults() { if(confirm("លុបប្រវត្តិពិន្ទុទាំងអស់មែនទេ?")) { appDB.results = []; saveDB(); renderResultsTable(); } }
@@ -320,16 +370,17 @@ window.showScreen = function(id) {
   if(id === 'screen-results') renderResultsTable();
 };
 
-// ══ STUDENT DASHBOARD ══
+// ══ STUDENT DASHBOARD & GAMEPLAY (No Changes Needed) ══
 function renderStudentDash() {
   const grid = document.getElementById('student-stages-grid');
   grid.innerHTML = '';
   appDB.stages.forEach((stage, i) => {
     const hasTaken = appDB.results.find(r => r.student === currentUser.username && r.stage === stage.name);
+    let totalStagePoints = stage.questions.reduce((sum, q) => sum + (q.points || 0), 0);
     grid.innerHTML += `
       <div class="card" style="${hasTaken ? 'opacity:0.6; border-color:var(--correct);' : ''}" onclick="startStudentStage(${i}, ${!!hasTaken})">
         <h3>${stage.name}</h3>
-        <p style="font-size:13px; color:var(--text-muted);">${stage.questions.length} សំណួរ</p>
+        <p style="font-size:13px; color:var(--text-muted);">${stage.questions.length} សំណួរ (សរុប ${totalStagePoints} ពិន្ទុ)</p>
         <div style="margin-top:10px; font-size:12px; font-weight:bold; color:${hasTaken ? 'var(--correct)' : 'var(--accent4)'}">
           ${hasTaken ? `ប្រឡងរួចរាល់` : 'ចុចដើម្បីប្រឡង'}
         </div>
@@ -351,12 +402,10 @@ function loadQuestion() {
   const q = stage.questions[currentQIndex];
   answered = false;
   document.getElementById('game-q-progress').textContent = `សំណួរទី ${currentQIndex+1} / ${stage.questions.length}`;
-  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('question-text').innerHTML = `${q.text} <span style="font-size:14px;color:var(--accent4);font-weight:normal;margin-left:10px;">(${q.points || 0} ពិន្ទុ)</span>`;
   document.getElementById('next-btn').style.display = 'none';
-  
   const area = document.getElementById('game-input-area');
   area.innerHTML = '';
-
   const qType = q.type || 'choice';
 
   if (qType === 'choice') {
@@ -371,7 +420,7 @@ function loadQuestion() {
         if(answered) return;
         answered = true;
         document.querySelectorAll('.answer-btn').forEach(b => b.style.pointerEvents = 'none');
-        if(i === q.correct) currentScore++;
+        if(i === q.correct) currentScore += (q.points || 0);
         btn.classList.add('selected-hidden');
         document.getElementById('next-btn').style.display = 'block';
       };
@@ -384,16 +433,10 @@ function loadQuestion() {
     txt.style.height = qType === 'blank' ? '50px' : '120px';
     txt.placeholder = 'វាយបញ្ចូលចម្លើយទីនេះ...';
     area.appendChild(txt);
-    
     const vBtn = document.createElement('button');
     vBtn.className = 'btn btn-primary';
     vBtn.textContent = 'កត់ត្រាចម្លើយ';
-    vBtn.onclick = () => {
-      if(answered) return;
-      answered = true;
-      vBtn.style.display = 'none';
-      document.getElementById('next-btn').style.display = 'block';
-    };
+    vBtn.onclick = () => { if(answered) return; answered = true; vBtn.style.display = 'none'; document.getElementById('next-btn').style.display = 'block'; };
     area.appendChild(vBtn);
   }
 }
@@ -402,233 +445,87 @@ function nextQuestion() {
   currentQIndex++;
   const stage = appDB.stages[currentStageIndex];
   if (currentQIndex >= stage.questions.length) {
-    const today = new Date().toLocaleDateString('km-KH');
-    appDB.results.push({
-      student: currentUser.username,
-      stage: stage.name,
-      score: currentScore,
-      date: today
-    });
+    let totalPts = stage.questions.reduce((sum, q) => sum + (q.points || 0), 0);
+    appDB.results.push({ student: currentUser.username, stage: stage.name, score: currentScore, totalPoints: totalPts, date: new Date().toLocaleDateString('km-KH') });
     saveDB();
     showScreen('screen-stage-complete');
-  } else {
-    loadQuestion();
-  }
+  } else { loadQuestion(); }
 }
 
-// ══ EDITOR ══
+// ══ EDITOR & EXPORT PDF/WORD (No Changes Needed) ══
 function showEditor() { editingStage = 0; renderEditorTabs(); renderEditorPanel(); showScreen('screen-editor'); }
-
 function renderEditorTabs() {
-  const tabs = document.getElementById('editor-tabs');
-  tabs.innerHTML = '';
+  const tabs = document.getElementById('editor-tabs'); tabs.innerHTML = '';
   appDB.stages.forEach((s, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'btn ' + (i === editingStage ? 'btn-primary' : 'btn-secondary');
-    btn.textContent = 'វិញ្ញាសា ' + (i+1);
-    btn.onclick = () => { editingStage = i; renderEditorTabs(); renderEditorPanel(); };
-    tabs.appendChild(btn);
+    const btn = document.createElement('button'); btn.className = 'btn ' + (i === editingStage ? 'btn-primary' : 'btn-secondary');
+    btn.textContent = 'វិញ្ញាសា ' + (i+1); btn.onclick = () => { editingStage = i; renderEditorTabs(); renderEditorPanel(); }; tabs.appendChild(btn);
   });
-  const addBtn = document.createElement('button');
-  addBtn.className = 'btn btn-secondary';
-  addBtn.textContent = '+ បន្ថែមវិញ្ញាសា';
-  addBtn.onclick = () => {
-    appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0 }] });
-    editingStage = appDB.stages.length - 1; saveDB(); renderEditorTabs(); renderEditorPanel();
-  };
+  const addBtn = document.createElement('button'); addBtn.className = 'btn btn-secondary'; addBtn.textContent = '+ បន្ថែមវិញ្ញាសា';
+  addBtn.onclick = () => { appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 }] }); editingStage = appDB.stages.length - 1; saveDB(); renderEditorTabs(); renderEditorPanel(); };
   tabs.appendChild(addBtn);
 }
-
 function renderEditorPanel() {
   const stage = appDB.stages[editingStage];
-  if (!stage) {
-    document.getElementById('editor-stage-panel').innerHTML = "<p style='color:var(--text-muted);'>មិនមានវិញ្ញាសាឡើយ សូមចុចប៊ូតុងខាងលើដើម្បីបង្កើត។</p>";
-    return;
-  }
-  
-  // បន្ថែមប៊ូតុងសម្រាប់ លុបវិញ្ញាសាទាំងមូល (Delete Stage) នៅទីនេះ
-  let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                <label style="color:#aaa;font-size:12px;">ឈ្មោះវិញ្ញាសា៖</label>
-                <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteStage(${editingStage})">🗑️ លុបវិញ្ញាសានេះទាំងមូល</button>
-              </div>
-              <input class="editor-input" value="${stage.name}" oninput="appDB.stages[editingStage].name=this.value;saveDB();">`;
-  
+  if (!stage) { document.getElementById('editor-stage-panel').innerHTML = "<p style='color:var(--text-muted);'>មិនមានវិញ្ញាសាឡើយ សូមចុចប៊ូតុងខាងលើដើម្បីបង្កើត។</p>"; return; }
+  let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><label style="color:#aaa;font-size:12px;">ឈ្មោះវិញ្ញាសា៖</label><button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteStage(${editingStage})">🗑️ លុបវិញ្ញាសានេះទាំងមូល</button></div><input class="editor-input" value="${stage.name}" oninput="appDB.stages[editingStage].name=this.value;saveDB();">`;
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
-    html += `<div style="background:var(--surface2); padding:15px; margin-bottom:10px; border-radius:8px; position:relative;">
-               <b>សំណួរទី ${qi+1}:</b> <button onclick="deleteQ(${qi})" style="position:absolute; right:15px; background:none; border:none; color:red; cursor:pointer;">✕ លុបសំណួរ</button><br>
-               <select class="editor-select" onchange="changeQType(${qi}, this.value)">
-                 <option value="choice" ${qType==='choice'?'selected':''}>ជ្រើសរើសចម្លើយ (A,B,C,D)</option>
-                 <option value="blank" ${qType==='blank'?'selected':''}>បំពេញចន្លោះ</option>
-                 <option value="written" ${qType==='written'?'selected':''}>សរសេរ/ឆ្លើយខ្លី</option>
-               </select>
-               <input class="editor-input" value="${q.text}" placeholder="ខ្លឹមសារសំណួរ" oninput="appDB.stages[editingStage].questions[${qi}].text=this.value;saveDB();">`;
-    
+    html += `<div style="background:var(--surface2); padding:15px; margin-bottom:10px; border-radius:8px; position:relative;"><b>សំណួរទី ${qi+1}:</b><span style="margin-left:15px; font-size:13px; color:var(--accent4);">កំណត់ពិន្ទុ៖ <input type="number" class="editor-input" style="width:70px; display:inline-block; padding:5px 10px;" value="${q.points || 0}" oninput="appDB.stages[editingStage].questions[${qi}].points=parseInt(this.value)||0;saveDB();"></span><button onclick="deleteQ(${qi})" style="position:absolute; right:15px; background:none; border:none; color:red; cursor:pointer;">✕ លុបសំណួរ</button><br><select class="editor-select" onchange="changeQType(${qi}, this.value)"><option value="choice" ${qType==='choice'?'selected':''}>ជ្រើសរើសចម្លើយ (A,B,C,D)</option><option value="blank" ${qType==='blank'?'selected':''}>បំពេញចន្លោះ</option><option value="written" ${qType==='written'?'selected':''}>សរសេរ/ឆ្លើយខ្លី</option></select><input class="editor-input" value="${q.text}" placeholder="ខ្លឹមសារសំណួរ" oninput="appDB.stages[editingStage].questions[${qi}].text=this.value;saveDB();">`;
     if (qType === 'choice') {
-      const letters = ['A','B','C','D'];
-      html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">`;
-      q.answers.forEach((ans, ai) => {
-         html += `<div>${letters[ai]}: <input class="editor-input" value="${ans}" oninput="appDB.stages[editingStage].questions[${qi}].answers[${ai}]=this.value;saveDB();"></div>`;
-      });
-      html += `</div>`;
-      html += `ចម្លើយត្រូវ (0=A, 1=B, 2=C, 3=D): <input type="number" min="0" max="3" class="editor-input" style="width:60px;display:inline-block;" value="${q.correct}" oninput="appDB.stages[editingStage].questions[${qi}].correct=parseInt(this.value);saveDB();">`;
-    } else if (qType === 'blank') {
-      html += `<input class="editor-input" value="${q.correct||''}" placeholder="ចម្លើយត្រូវ (គន្លឹះ)" oninput="appDB.stages[editingStage].questions[${qi}].correct=this.value;saveDB();">`;
-    } else if (qType === 'written') {
-      html += `<textarea class="editor-input" style="height:60px" placeholder="ចម្លើយគំរូសម្រាប់គ្រូ" oninput="appDB.stages[editingStage].questions[${qi}].sampleAnswer=this.value;saveDB();">${q.sampleAnswer||''}</textarea>`;
-    }
+      const letters = ['A','B','C','D']; html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">`;
+      q.answers.forEach((ans, ai) => { html += `<div>${letters[ai]}: <input class="editor-input" value="${ans}" oninput="appDB.stages[editingStage].questions[${qi}].answers[${ai}]=this.value;saveDB();"></div>`; });
+      html += `</div>ចម្លើយត្រូវ (0=A, 1=B, 2=C, 3=D): <input type="number" min="0" max="3" class="editor-input" style="width:60px;display:inline-block;" value="${q.correct}" oninput="appDB.stages[editingStage].questions[${qi}].correct=parseInt(this.value);saveDB();">`;
+    } else if (qType === 'blank') { html += `<input class="editor-input" value="${q.correct||''}" placeholder="ចម្លើយត្រូវ (គន្លឹះ)" oninput="appDB.stages[editingStage].questions[${qi}].correct=this.value;saveDB();">`;
+    } else if (qType === 'written') { html += `<textarea class="editor-input" style="height:60px" placeholder="ចម្លើយគំរូសម្រាប់គ្រូ" oninput="appDB.stages[editingStage].questions[${qi}].sampleAnswer=this.value;saveDB();">${q.sampleAnswer||''}</textarea>`; }
     html += `</div>`;
   });
-  html += `<button class="btn btn-secondary" onclick="addQ()">+ បន្ថែមសំណួរ</button>`;
-  document.getElementById('editor-stage-panel').innerHTML = html;
+  html += `<button class="btn btn-secondary" onclick="addQ()">+ បន្ថែមសំណួរ</button>`; document.getElementById('editor-stage-panel').innerHTML = html;
 }
-
-// មុខងារសម្រាប់លុបវិញ្ញាសាទាំងមូល
-function deleteStage(idx) {
-  if (confirm("តើអ្នកពិតជាចង់លុបវិញ្ញាសានេះទាំងមូលមែនទេ? រាល់សំណួរទាំងអស់ក្នុងវិញ្ញាសានេះនឹងត្រូវបាត់បង់រហូត។")) {
-    appDB.stages.splice(idx, 1);
-    if (appDB.stages.length === 0) {
-      appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0 }] });
-    }
-    editingStage = 0;
-    saveDB();
-    renderEditorTabs();
-    renderEditorPanel();
-  }
-}
-
-function changeQType(qi, type) {
-  const q = appDB.stages[editingStage].questions[qi];
-  q.type = type;
-  if(type === 'choice' && !q.answers) q.answers = ['','','',''];
-  if(type === 'choice' && typeof q.correct !== 'number') q.correct = 0;
-  if(type === 'blank' && typeof q.correct !== 'string') q.correct = '';
-  if(type === 'written' && !q.sampleAnswer) q.sampleAnswer = '';
-  saveDB(); renderEditorPanel();
-}
-function addQ() { appDB.stages[editingStage].questions.push({ type: 'choice', text: '', answers: ['','','',''], correct: 0 }); saveDB(); renderEditorPanel(); }
+function deleteStage(idx) { if (confirm("លុបវិញ្ញាសានេះទាំងមូលមែនទេ?")) { appDB.stages.splice(idx, 1); if (appDB.stages.length === 0) appDB.stages.push({ name: 'វិញ្ញាសាថ្មី', questions: [{ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 }] }); editingStage = 0; saveDB(); renderEditorTabs(); renderEditorPanel(); } }
+function changeQType(qi, type) { const q = appDB.stages[editingStage].questions[qi]; q.type = type; if(type === 'choice' && !q.answers) q.answers = ['','','','']; if(type === 'choice' && typeof q.correct !== 'number') q.correct = 0; if(type === 'blank' && typeof q.correct !== 'string') q.correct = ''; if(type === 'written' && !q.sampleAnswer) q.sampleAnswer = ''; saveDB(); renderEditorPanel(); }
+function addQ() { appDB.stages[editingStage].questions.push({ type: 'choice', text: '', answers: ['','','',''], correct: 0, points: 10 }); saveDB(); renderEditorPanel(); }
 function deleteQ(qi) { if(confirm("លុបសំណួរនេះទេ?")) { appDB.stages[editingStage].questions.splice(qi,1); saveDB(); renderEditorPanel(); } }
 
-// ══ EXPORT PDF ══
 function exportPDF(showAnswers) {
   const element = document.createElement('div');
   element.style.cssText = "font-family:'Kantumruy Pro', 'Khmer OS Battambang', sans-serif; color:#111; padding:35px; background:#fff;";
   let headerTitle = showAnswers ? "🔑 គន្លឹះចម្លើយវិញ្ញាសា (សម្រាប់គ្រូ)" : "📝 វិញ្ញាសាប្រឡង/កិច្ចការសាលា (សម្រាប់សិស្ស)";
-  
-  let html = `
-    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px double #2d1b69; padding-bottom: 12px; margin-bottom: 25px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <img src="Logo Sovannaphumi school.png" style="width: 65px; height: auto;" alt="Logo" onerror="this.style.display='none'">
-        <div>
-          <h3 style="margin: 0; font-size: 16px; color: #2d1b69; font-weight: bold;">សាលារៀនសុវណ្ណភូមិ</h3>
-          <p style="margin: 2px 0 0 0; font-size: 12px; color: #e8a900; font-weight: bold;">ទីតាំងទួលពង្រ</p>
-        </div>
-      </div>
-      <div style="text-align: right;"><h2 style="margin: 0; color: #333; font-size: 16px; font-weight: bold;">${headerTitle}</h2></div>
-    </div>
-    <div style="margin-bottom: 20px;">
-      <p style="color: #222; font-size: 13px;"><strong>ឈ្មោះសិស្ស៖</strong>.................................................................... <strong>ថ្នាក់ទី៖</strong>.................. <strong>កាលបរិច្ឆេទ៖</strong>...........................</p>
-    </div>
-  `;
-
+  let html = `<div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px double #2d1b69; padding-bottom: 12px; margin-bottom: 25px;"><div style="display: flex; align-items: center; gap: 12px;"><img src="Logo Sovannaphumi school.png" style="width: 65px; height: auto;" alt="Logo" onerror="this.style.display='none'"><div><h3 style="margin: 0; font-size: 16px; color: #2d1b69; font-weight: bold;">សាលារៀនសុវណ្ណភូមិ</h3><p style="margin: 2px 0 0 0; font-size: 12px; color: #e8a900; font-weight: bold;">ទីតាំងទួលពង្រ</p></div></div><div style="text-align: right;"><h2 style="margin: 0; color: #333; font-size: 16px; font-weight: bold;">${headerTitle}</h2></div></div><div style="margin-bottom: 20px;"><p style="color: #222; font-size: 13px;"><strong>ឈ្មោះសិស្ស៖</strong>.................................................................... <strong>ថ្នាក់ទី៖</strong>.................. <strong>កាលបរិច្ឆេទ៖</strong>...........................</p></div>`;
   const stage = appDB.stages[editingStage];
   html += `<h2 style="background: #2d1b69; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">${stage.name}</h2>`;
-
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
-    html += `<div style="margin-bottom: 15px; padding: 10px; border-left: 4px solid #a78bfa; background: #f9f9fb; page-break-inside: avoid;">
-                <p style="font-weight: bold; font-size: 13px; color: #000; margin-bottom: 6px;">សំណួរទី ${qi + 1} ៖ ${q.text}</p>`;
-
+    html += `<div style="margin-bottom: 15px; padding: 10px; border-left: 4px solid #a78bfa; background: #f9f9fb; page-break-inside: avoid;"><p style="font-weight: bold; font-size: 13px; color: #000; margin-bottom: 6px;">សំណួរទី ${qi + 1} (${q.points || 0} ពិន្ទុ) ៖ ${q.text}</p>`;
     if (qType === 'choice') {
       html += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-left: 10px;">`;
       const letters = ['A', 'B', 'C', 'D'];
-      q.answers.forEach((ans, ai) => {
-        const isCorrect = ai === q.correct;
-        let style = "color: #333; padding: 2px 6px;";
-        if (showAnswers && isCorrect) style = "color: #1e7e78; font-weight: bold; background: #e6f7f6; padding: 2px 6px; border-radius:3px;";
-        html += `<div style="${style}"><strong>${letters[ai]}.</strong> ${ans} ${showAnswers && isCorrect ? ' ✓' : ''}</div>`;
-      });
+      q.answers.forEach((ans, ai) => { const isCorrect = ai === q.correct; let style = "color: #333; padding: 2px 6px;"; if (showAnswers && isCorrect) style = "color: #1e7e78; font-weight: bold; background: #e6f7f6; padding: 2px 6px; border-radius:3px;"; html += `<div style="${style}"><strong>${letters[ai]}.</strong> ${ans} ${showAnswers && isCorrect ? ' ✓' : ''}</div>`; });
       html += `</div>`;
-    } else if (qType === 'blank') {
-      if (showAnswers) html += `<div style="margin-left: 10px; font-size: 12px; color: #555;">✍️ ចម្លើយត្រឹមត្រូវ៖ <span style="color: #1e7e78; font-weight: bold;">${q.correct}</span></div>`;
-      else html += `<div style="margin-left: 10px; font-size: 12px; color: #666;">✍️ ចម្លើយ៖ ....................................................................................................</div>`;
-    } else if (qType === 'written') {
-      if (showAnswers) html += `<div style="margin-left: 10px; font-size: 12px; color: #555;"><div style="background: #f0f0f5; padding: 8px; border-radius: 4px; font-size:12px;"><strong>🔑 គន្លឹះ៖</strong> ${q.sampleAnswer}</div></div>`;
-      else html += `<div style="margin-left: 10px; font-size: 12px; color: #777;"><div style="margin-bottom:20px;">ចម្លើយ៖ ..........................................................................................................................................</div><div>..........................................................................................................................................................</div></div>`;
-    }
+    } else if (qType === 'blank') { if (showAnswers) html += `<div style="margin-left: 10px; font-size: 12px; color: #555;">✍️ ចម្លើយត្រឹមត្រូវ៖ <span style="color: #1e7e78; font-weight: bold;">${q.correct}</span></div>`; else html += `<div style="margin-left: 10px; font-size: 12px; color: #666;">✍️ ចម្លើយ៖ ....................................................................................................</div>`;
+    } else if (qType === 'written') { if (showAnswers) html += `<div style="margin-left: 10px; font-size: 12px; color: #555;"><div style="background: #f0f0f5; padding: 8px; border-radius: 4px; font-size:12px;"><strong>🔑 គន្លឹះ៖</strong> ${q.sampleAnswer}</div></div>`; else html += `<div style="margin-left: 10px; font-size: 12px; color: #777;"><div style="margin-bottom:20px;">ចម្លើយ៖ ..........................................................................................................................................</div><div>..........................................................................................................................................................</div></div>`; }
     html += `</div>`;
   });
-
   element.innerHTML = html;
   const pdfName = showAnswers ? 'គន្លឹះចម្លើយ_គ្រូ.pdf' : 'វិញ្ញាសាសិស្ស.pdf';
-  const opt = { margin: 12, filename: pdfName, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-  html2pdf().set(opt).from(element).save();
+  html2pdf().set({ margin: 12, filename: pdfName, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
 }
 
-// ══ EXPORT WORD (.doc) ══
 function exportWord() {
   const stage = appDB.stages[editingStage];
-  
-  let wordHTML = `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head>
-      <meta charset='utf-8'>
-      <title>វិញ្ញាសាសិស្ស</title>
-      <style>
-        body { font-family: 'Khmer OS Battambang', 'Kantumruy Pro', sans-serif; font-size: 12pt; color: #000; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .header h2 { font-size: 16pt; margin: 0; color: #2d1b69; }
-        .header p { font-size: 12pt; margin: 5px 0; font-weight: bold; }
-        .student-info { margin-bottom: 20px; font-size: 12pt; }
-        .stage-title { font-size: 14pt; font-weight: bold; background: #e0e0e0; padding: 5px; }
-        .question-box { margin-bottom: 15px; margin-top: 10px; }
-        .question-text { font-weight: bold; font-size: 12pt; }
-        .options { margin-left: 20px; }
-        .option { margin-bottom: 5px; }
-        .lines { color: #666; margin-top: 10px; }
-      </style>
-    </head>
-    <body>
-      <div class="header">
-        <h2>សាលារៀនសុវណ្ណភូមិ (ទីតាំងទួលពង្រ)</h2>
-        <p>📝 វិញ្ញាសាប្រឡង / កិច្ចការសាលា (សម្រាប់សិស្ស)</p>
-      </div>
-      <div class="student-info">
-        ឈ្មោះសិស្ស៖.................................................................... ថ្នាក់ទី៖.................. កាលបរិច្ឆេទ៖...........................
-      </div>
-      
-      <div class="stage-title">${stage.name}</div>
-  `;
-
+  let wordHTML = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>វិញ្ញាសាសិស្ស</title><style>body { font-family: 'Khmer OS Battambang', 'Kantumruy Pro', sans-serif; font-size: 12pt; color: #000; } .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; } .header h2 { font-size: 16pt; margin: 0; color: #2d1b69; } .header p { font-size: 12pt; margin: 5px 0; font-weight: bold; } .student-info { margin-bottom: 20px; font-size: 12pt; } .stage-title { font-size: 14pt; font-weight: bold; background: #e0e0e0; padding: 5px; } .question-box { margin-bottom: 15px; margin-top: 10px; } .question-text { font-weight: bold; font-size: 12pt; } .options { margin-left: 20px; } .option { margin-bottom: 5px; } .lines { color: #666; margin-top: 10px; }</style></head><body><div class="header"><h2>សាលារៀនសុវណ្ណភូមិ (ទីតាំងទួលពង្រ)</h2><p>📝 វិញ្ញាសាប្រឡង / កិច្ចការសាលា (សម្រាប់សិស្ស)</p></div><div class="student-info">ឈ្មោះសិស្ស៖.................................................................... ថ្នាក់ទី៖.................. កាលបរិច្ឆេទ៖...........................</div><div class="stage-title">${stage.name}</div>`;
   stage.questions.forEach((q, qi) => {
     const qType = q.type || 'choice';
-    wordHTML += `<div class="question-box"><div class="question-text">សំណួរទី ${qi + 1}: ${q.text}</div>`;
-    
-    if (qType === 'choice') {
-      wordHTML += `<div class="options">`;
-      const letters = ['A', 'B', 'C', 'D'];
-      q.answers.forEach((ans, ai) => {
-        wordHTML += `<div class="option"><strong>${letters[ai]}.</strong> ${ans}</div>`;
-      });
-      wordHTML += `</div>`;
-    } else if (qType === 'blank') {
-      wordHTML += `<div class="lines">✍️ ចម្លើយ៖ ....................................................................................................................</div>`;
-    } else if (qType === 'written') {
-      wordHTML += `<div class="lines"><br>ចម្លើយ៖ ..............................................................................................................................................................<br><br>................................................................................................................................................................................<br><br>................................................................................................................................................................................</div>`;
-    }
+    wordHTML += `<div class="question-box"><div class="question-text">សំណួរទី ${qi + 1} (${q.points || 0} ពិន្ទុ): ${q.text}</div>`;
+    if (qType === 'choice') { wordHTML += `<div class="options">`; const letters = ['A', 'B', 'C', 'D']; q.answers.forEach((ans, ai) => { wordHTML += `<div class="option"><strong>${letters[ai]}.</strong> ${ans}</div>`; }); wordHTML += `</div>`;
+    } else if (qType === 'blank') { wordHTML += `<div class="lines">✍️ ចម្លើយ៖ ....................................................................................................................</div>`;
+    } else if (qType === 'written') { wordHTML += `<div class="lines"><br>ចម្លើយ៖ ..............................................................................................................................................................<br><br>................................................................................................................................................................................<br><br>................................................................................................................................................................................</div>`; }
     wordHTML += `</div>`;
   });
-
   wordHTML += `</body></html>`;
-
   const blob = new Blob(['\ufeff', wordHTML], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `វិញ្ញាសាសិស្ស_${stage.name}.doc`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const link = document.createElement('a'); link.href = url; link.download = `វិញ្ញាសាសិស្ស_${stage.name}.doc`;
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
 }
 </script>
 </body>
