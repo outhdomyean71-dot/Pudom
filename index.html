@@ -113,6 +113,25 @@
         <h3>📊 របាយការណ៍ពិន្ទុ</h3>
         <p style="font-size:13px; color:var(--text-muted);">មើលលទ្ធផលប្រឡងរបស់សិស្ស</p>
       </div>
+      <div class="card" onclick="showScreen('screen-change-password')">
+        <h3>🔑 ដូរលេខសម្ងាត់</h3>
+        <p style="font-size:13px; color:var(--text-muted);">ផ្លាស់ប្តូរលេខសម្ងាត់គណនីរបស់អ្នក</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-change-password" class="screen" style="justify-content: flex-start;">
+  <div class="dashboard-container">
+    <div class="dash-header">
+      <h3 style="color:var(--accent1);">🔑 ផ្លាស់ប្ដូរលេខសម្ងាត់ (Change Password)</h3>
+      <button class="btn btn-secondary" onclick="showScreen('screen-admin-dash')">← ត្រឡប់ក្រោយ</button>
+    </div>
+    <div style="background:var(--surface); padding:30px; border-radius:var(--radius); width:100%; max-width:400px; border:1px solid var(--surface2); display:flex; flex-direction:column; gap:15px; margin-top: 20px;">
+      <input type="password" id="cp-old" class="input-field" placeholder="លេខសម្ងាត់ចាស់ (Old Password)">
+      <input type="password" id="cp-new" class="input-field" placeholder="លេខសម្ងាត់ថ្មី (New Password)">
+      <input type="password" id="cp-confirm" class="input-field" placeholder="បញ្ជាក់លេខសម្ងាត់ថ្មី (Confirm Password)">
+      <button class="btn btn-primary" onclick="confirmChangePassword()">រក្សាទុកការផ្លាស់ប្តូរ</button>
     </div>
   </div>
 </div>
@@ -291,6 +310,37 @@ function login() {
 }
 
 function logout() { currentUser = null; showScreen('screen-login'); }
+
+// ══ CHANGE PASSWORD ══
+function confirmChangePassword() {
+  const oldP = document.getElementById('cp-old').value;
+  const newP = document.getElementById('cp-new').value;
+  const confP = document.getElementById('cp-confirm').value;
+
+  if (!oldP || !newP || !confP) {
+    return alert("សូមបំពេញចន្លោះទាំងអស់!");
+  }
+  if (oldP !== currentUser.password) {
+    return alert("លេខសម្ងាត់ចាស់របស់អ្នកមិនត្រឹមត្រូវទេ!");
+  }
+  if (newP !== confP) {
+    return alert("ការបញ្ជាក់លេខសម្ងាត់ថ្មីមិនត្រូវគ្នាទេ! សូមពិនិត្យម្តងទៀត។");
+  }
+  
+  const userIndex = appDB.users.findIndex(u => u.username === currentUser.username);
+  if (userIndex !== -1) {
+    appDB.users[userIndex].password = newP;
+    currentUser.password = newP; // update current session
+    saveDB();
+    alert("លេខសម្ងាត់របស់អ្នកត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ!");
+    
+    // clear fields
+    document.getElementById('cp-old').value = '';
+    document.getElementById('cp-new').value = '';
+    document.getElementById('cp-confirm').value = '';
+    showScreen('screen-admin-dash');
+  }
+}
 
 // ══ USER MANAGEMENTS ══
 function createUser() {
