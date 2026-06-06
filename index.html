@@ -296,13 +296,13 @@
 const defaultAppDB = {
   users: [
     { username: 'admin', password: '123', role: 'admin' },
-    { username: 'T1', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'T2', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'T3', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'T4', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'T5', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'T6', password: '123', role: 'teacher', createdBy: 'admin' },
-    { username: 'sok', password: '123', role: 'student', createdBy: 'teacher1' }
+    { username: 'T1', password: '123', role: 'T', createdBy: 'admin' },
+    { username: 'T2', password: '123', role: 'T', createdBy: 'admin' },
+    { username: 'T3', password: '123', role: 'T', createdBy: 'admin' },
+    { username: 'T4', password: '123', role: 'T', createdBy: 'admin' },
+    { username: 'T5', password: '123', role: 'T', createdBy: 'admin' },
+    { username: 'T6', password: '123', role: 'T', createdBy: 'admin' },
+    { username: 'sok', password: '123', role: 'student', createdBy: 'T1' }
   ],
   results: [],
   stages: [
@@ -394,7 +394,7 @@ const MATH_SYMBOLS = [
   { g: 'Exp', syms: ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹','⁺','⁻','ⁿ'] },
   { g: 'Sub', syms: ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉','₊','₋','₍','₎'] },
 ];
-const CHEM_SYMBOLS = [
+const CHEM_SYMBOLS = [T
   { g: 'ធាតុ', syms: ['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca','Fe','Cu','Zn','Ag','Au','Hg','Pb','I','Br'] },
   { g: 'ប្រតិ', syms: ['→','⇌','↑','↓','⇒','⟶','⟷','⟶'] },
   { g: 'ទូទៅ', syms: ['°C','°F','K','mol','atm','pH','Δ','ΔH','ΔG','ΔS','Ka','Kb','Kc','Kp','Kw'] },
